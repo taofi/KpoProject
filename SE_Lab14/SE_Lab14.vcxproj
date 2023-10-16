@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,7 +131,10 @@
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="FST.cpp" />
     <ClCompile Include="In.cpp" />
+    <ClCompile Include="IT.cpp" />
+    <ClCompile Include="LexAnalysis.cpp" />
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="LT.cpp" />
     <ClCompile Include="Out.cpp" />
     <ClCompile Include="Parm.cpp" />
     <ClCompile Include="SE_Lab14.cpp" />
@@ -138,10 +142,15 @@
   <ItemGroup>
     <ClInclude Include="Error.h" />
     <ClInclude Include="FST.h" />
+    <ClInclude Include="Graphs.h" />
     <ClInclude Include="In.h" />
+    <ClInclude Include="IT.h" />
+    <ClInclude Include="LexAnalysis.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="LT.h" />
     <ClInclude Include="Out.h" />
     <ClInclude Include="Parm.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
