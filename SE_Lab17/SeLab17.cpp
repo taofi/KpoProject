@@ -7,8 +7,8 @@
 int _tmain(int argc, _TCHAR* argv[])
 {
 
-    argc = 1;
-    argv[0] = (_TCHAR*)L"-in:D:\\projects\\SE_Lab17\\Debug\\in.txt";
+    //argc = 1;
+    //argv[0] = (_TCHAR*)L"-in:D:\\projects\\KpoProject\\Debug\\in.txt";
 
     setlocale(LC_ALL, "Rus");
 
@@ -34,8 +34,8 @@ int _tmain(int argc, _TCHAR* argv[])
         MFST_TRACE_START
         MFST::Mfst mfst(tabel, GRB::getGreibach());
         mfst.start();
-        LT::Delete(tabel.LexTable);
-        IT::Delete(tabel.idTable);
+        mfst.savededucation();
+        mfst.printrules();
         Log::Close(log);
         Out::Close(out);
     }

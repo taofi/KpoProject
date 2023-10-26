@@ -1,24 +1,18 @@
 ------------------ Литералы ------------------
  Идентификатор:      Тип данных:      Значение:              Длина строки:   Первое вхождение:
-   0_l			INT 		1			-		66
-   1_l			INT 		3			-		68
-   x			INT 		1			-		117
-   y			INT 		5			-		121
-   sa			STR 	    '1234567890'                12		125
-   sb			STR 	    '1234567890'                12		129
-   2_l			STR 	    'контрольный пример'        20		132
-   3_l			INT 		0			-		165
-   4_l			INT 		0			-		169
+   x			INT 		1			-		67
+   y			INT 		5			-		71
+   sa			STR 	    '1234567890'                12		75
+   sb			STR 	    '1234567890'                12		79
+   0_l			INT 		0			-		91
 
 
 
 ------------------ Функции ------------------
  Идентификатор:      Тип данных возврата:   Количество переданных параметров:     Первое вхождение:
    fi                      INT 				2				2
-   fs                      STR 				2				32
-   substr                  STR 				3				48
-   main                    INT 				0				80
-   strlen                  INT 				1				109
+   main                    INT 				0				30
+   strlen                  INT 				1				59
 
 
 
@@ -27,19 +21,13 @@
    fi                                x                INT               P			5
    fi                                y                INT               P			8
    fi                                z                INT               V			13
-   fs                                a                STR               P			35
-   fs                                b                STR               P			38
-   fs                                c                STR               V			43
-   substr                            a                STR               P			51
-   substr                            p                INT               P			54
-   substr                            n                INT               P			57
-   main                              x                INT               V			84
-   main                              y                INT               V			88
-   main                              z                INT               V			92
-   main                             sa                STR               V			96
-   main                             sb                STR               V			100
-   main                             sc                STR               V			104
-   strlen                            p                STR               P			112
+   main                              x                INT               V			34
+   main                              y                INT               V			38
+   main                              z                INT               V			42
+   main                             sa                STR               V			46
+   main                             sb                STR               V			50
+   main                             sc                STR               V			54
+   strlen                            p                STR               P			62
 
 
 

@@ -31,7 +31,7 @@ namespace In
 		std::streampos fileSize = ifs.tellg();
 		in.size = fileSize;						//get size of file
 		ifs.seekg(0, std::ios::beg);
-		std::cout << in.size << std::endl;
+		//std::cout << in.size << std::endl;
 
 		wchar_t c = ifs.get();
 		in.text = new unsigned char[in.size];
@@ -63,8 +63,9 @@ namespace In
 			posInLine++;
 			c = ifs.get();
 		}
-		in.text[posSymb] = 0;
-		in.size -= in.ignor;
+		in.text[posSymb] = '\0';
+		in.size = posSymb;
+		//std::cout << posSymb  << " " << in.size << std::endl;
 		ifs.close();
 
 		return in;

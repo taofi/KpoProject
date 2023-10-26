@@ -8,31 +8,34 @@ namespace GRB
 	Greibach greibach(NS('S'), TS('$'),
 		8,
 
-		Rule(NS('S'), GRB_ERROR_SERIES + 0,						// Неверная структура программы	
+		Rule(NS('S'), GRB_ERROR_SERIES + 0,						// Синтаксическая ошибка. Неверная структура программы
 			3,
-			Rule::Chain(5, TS('m'), TS('{'), NS('N'), TS('}'), TS(';')),
-			Rule::Chain(14, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('R'), TS(';'), TS('}'), TS(';'), NS('S')),
-			Rule::Chain(13, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), TS('r'), NS('R'), TS(';'), TS('}'), TS(';'), NS('S'))
+			Rule::Chain(8, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';')),
+			Rule::Chain(14, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';'), NS('S')),
+			Rule::Chain(9, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';'), NS('S'))
 
 		),
 
-		Rule(NS('N'), GRB_ERROR_SERIES + 1,					// Ошибочный оператор
-			10,
-			Rule::Chain(4, TS('v'), TS('t'), TS('i'), TS(';')),
+		Rule(NS('N'), GRB_ERROR_SERIES + 1,					// Синтаксическая ошибка. Ошибочный оператор"
+			12,
+			Rule::Chain(4, TS('d'), TS('t'), TS('i'), TS(';')),
+			Rule::Chain(3, TS('p'), TS('i'), TS(';')),
+			Rule::Chain(3, TS('p'), TS('l'), TS(';')),
+			Rule::Chain(3, TS('r'), NS('E'), TS(';')),
 			Rule::Chain(4, TS('i'), TS('='), NS('E'), TS(';')),
-			Rule::Chain(5, TS('v'), TS('t'), TS('i'), TS(';'), NS('N')),
+			Rule::Chain(8, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';')),
+			Rule::Chain(5, TS('d'), TS('t'), TS('i'), TS(';'), NS('N')),
+			Rule::Chain(4, TS('p'), TS('i'), TS(';'), NS('N')),
+			Rule::Chain(4, TS('p'), TS('l'), TS(';'), NS('N')),
+			Rule::Chain(4, TS('r'), NS('E'), TS(';'), NS('N')),
 			Rule::Chain(5, TS('i'), TS('='), NS('E'), TS(';'), NS('N')),
-			Rule::Chain(9, TS('v'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';'), NS('N')),
-			Rule::Chain(5, TS('w'), TS('('), NS('R'), TS(')'), TS(';')),
-			Rule::Chain(6, TS('w'), TS('('), NS('R'), TS(')'), TS(';'), NS('N')),
-			Rule::Chain(8, TS('?'), TS('('), NS('I'), TS(')'), TS('['), NS('N'), TS(']'), NS('N')),
-			Rule::Chain(7, TS('?'), TS('('), NS('I'), TS(')'), TS('['), NS('N'), TS(']')),
-			Rule::Chain(9, TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';'), NS('N'), TS('}'), TS(';'))
+			Rule::Chain(9, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';'), NS('N'))
+			//Rule::Chain(9, TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';'), NS('N'), TS('}'), TS(';'))
 			//Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), TS(';'), NS('N'))
 		),
 
-		Rule(NS('E'), GRB_ERROR_SERIES + 2,					// Ошибка в выражении 
-			10,
+		Rule(NS('E'), GRB_ERROR_SERIES + 2,					//Синтаксическая ошибка. Ошибка в выражении
+			8,
 			Rule::Chain(1, TS('i')),
 			Rule::Chain(1, TS('l')),
 			Rule::Chain(3, TS('('), NS('E'), TS(')')),
@@ -41,27 +44,27 @@ namespace GRB
 			Rule::Chain(2, TS('i'), NS('M')),
 			Rule::Chain(2, TS('l'), NS('M')),
 			Rule::Chain(4, TS('('), NS('E'), TS(')'), NS('M')),
-			Rule::Chain(4, TS('i'), TS('('), TS(')'), NS('M')),
+			//Rule::Chain(4, TS('i'), TS('('), TS(')'), NS('M')),
 			Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), NS('M'))
 
 
 		),
 
-		Rule(NS('M'), GRB_ERROR_SERIES + 3, // Ошибка в операторах выражений
+		Rule(NS('M'), GRB_ERROR_SERIES + 3, // Синтаксическая ошибка. Ошибка в операторах выражений
 			2,
 
-			Rule::Chain(2, TS('o'), NS('E')),
-			Rule::Chain(3, TS('o'), NS('E'), NS('M'))
+			Rule::Chain(2, TS('v'), NS('E')),
+			Rule::Chain(3, TS('v'), NS('E'), NS('M'))
 
 		),
 
-		Rule(NS('F'), GRB_ERROR_SERIES + 4, // ошибка в параметрах
+		Rule(NS('F'), GRB_ERROR_SERIES + 4, // Синтаксическая ошибка. Ошибка в параметрах функции
 			2,
 			Rule::Chain(2, TS('t'), TS('i')),
 			Rule::Chain(4, TS('t'), TS('i'), TS(','), NS('F'))
 		),
 
-		Rule(NS('W'), GRB_ERROR_SERIES + 5, // ошибка в параметрах вызываемой ф-ции
+		Rule(NS('W'), GRB_ERROR_SERIES + 5, // Синтаксическая ошибка. Ошибка в параметрах вызываемой функции
 			4,
 			Rule::Chain(1, TS('i')),
 			Rule::Chain(1, TS('l')),
@@ -69,7 +72,7 @@ namespace GRB
 			Rule::Chain(3, TS('l'), TS(','), NS('W'))
 		),
 
-		Rule(NS('R'), GRB_ERROR_SERIES + 6, // знач только перемнная или литерал
+		Rule(NS('R'), GRB_ERROR_SERIES + 6, //Синтаксическая ошибка. Значением данного оператора может быть только переменная или литерал
 			2,
 			Rule::Chain(1, TS('i')),
 			Rule::Chain(1, TS('l'))
