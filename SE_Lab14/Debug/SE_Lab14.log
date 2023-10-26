@@ -1,4 +1,0 @@
-﻿  In.cpp
-D:\projects\KpoProject\SE_Lab14\In.cpp(31,13): warning C4244: =: преобразование "std::streamoff" в "int", возможна потеря данных
-D:\projects\KpoProject\SE_Lab14\In.cpp(49,24): warning C4244: =: преобразование "wchar_t" в "unsigned char", возможна потеря данных
-  SE_Lab14.vcxproj -> D:\projects\KpoProject\Debug\SE_Lab14.exe

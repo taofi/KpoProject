@@ -1,9 +1,0 @@
-﻿  Error.cpp
-  In.cpp
-  Log.cpp
-C:\Users\User\Desktop\ун\кпо\SE_Lab14\SE_Lab14\Log.cpp(34,17): warning C4267: +=: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\User\Desktop\ун\кпо\SE_Lab14\SE_Lab14\Log.cpp(55,17): warning C4267: +=: преобразование из "size_t" в "int"; возможна потеря данных
-  Parm.cpp
-  SE_Lab14.cpp
-  Создание кода...
-  SE_Lab14.vcxproj -> C:\Users\User\Desktop\ун\кпо\SE_Lab14\x64\Debug\SE_Lab14.exe
