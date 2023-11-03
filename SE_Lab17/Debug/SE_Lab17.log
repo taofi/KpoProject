@@ -1,2 +1,3 @@
-﻿  GRB.cpp
+﻿  MFST.cpp
+D:\projects\KpoProject\SE_Lab17\MFST.cpp(254,66): warning C4267: =: преобразование из "size_t" в "short"; возможна потеря данных
   SE_Lab17.vcxproj -> D:\projects\KpoProject\Debug\SE_Lab17.exe

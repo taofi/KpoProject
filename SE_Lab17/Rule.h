@@ -6,7 +6,7 @@ namespace GRB
 #define NS(n)	GRB::Rule::Chain::N(n)
 #define TS(n)	GRB::Rule::Chain::T(n)
 	Greibach greibach(NS('S'), TS('$'),
-		8,
+		6,
 
 		Rule(NS('S'), GRB_ERROR_SERIES + 0,						// Синтаксическая ошибка. Неверная структура программы
 			3,
@@ -16,15 +16,17 @@ namespace GRB
 
 		),
 
-		Rule(NS('N'), GRB_ERROR_SERIES + 1,					// Синтаксическая ошибка. Ошибочный оператор"
-			12,
+		Rule(NS('N'), GRB_ERROR_SERIES + 1,					// Синтаксическая ошибка. Ошибочный оператор
+			14,
 			Rule::Chain(4, TS('d'), TS('t'), TS('i'), TS(';')),
+			Rule::Chain(7, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')')),
 			Rule::Chain(3, TS('p'), TS('i'), TS(';')),
 			Rule::Chain(3, TS('p'), TS('l'), TS(';')),
 			Rule::Chain(3, TS('r'), NS('E'), TS(';')),
 			Rule::Chain(4, TS('i'), TS('='), NS('E'), TS(';')),
 			Rule::Chain(8, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';')),
 			Rule::Chain(5, TS('d'), TS('t'), TS('i'), TS(';'), NS('N')),
+			Rule::Chain(8, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), NS('N')),
 			Rule::Chain(4, TS('p'), TS('i'), TS(';'), NS('N')),
 			Rule::Chain(4, TS('p'), TS('l'), TS(';'), NS('N')),
 			Rule::Chain(4, TS('r'), NS('E'), TS(';'), NS('N')),
@@ -70,23 +72,8 @@ namespace GRB
 			Rule::Chain(1, TS('l')),
 			Rule::Chain(3, TS('i'), TS(','), NS('W')),
 			Rule::Chain(3, TS('l'), TS(','), NS('W'))
-		),
-
-		Rule(NS('R'), GRB_ERROR_SERIES + 6, //Синтаксическая ошибка. Значением данного оператора может быть только переменная или литерал
-			2,
-			Rule::Chain(1, TS('i')),
-			Rule::Chain(1, TS('l'))
-		),
-
-		Rule(NS('I'), GRB_ERROR_SERIES + 7, // ошибка в услов операторе
-			6,
-			Rule::Chain(3, TS('i'), TS('o'), TS('i')),
-			Rule::Chain(1, TS('l')),
-			Rule::Chain(1, TS('i')),
-			Rule::Chain(3, TS('i'), TS('o'), TS('l')),
-			Rule::Chain(3, TS('l'), TS('o'), TS('i')),
-			Rule::Chain(3, TS('l'), TS('o'), TS('l'))
 		)
+
 
 
 	);
