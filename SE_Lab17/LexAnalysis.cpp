@@ -11,7 +11,7 @@ namespace LA
 		int lexemaPosition = 0;
 
 		In::IN inTable;
-
+		
 		for (int i = 0; i < source.size; i++)
 		{
 			char* tempWord = new char[token_size] {};
@@ -38,7 +38,7 @@ namespace LA
 					throw ERROR_THROW_IN(90, lexemaLine, lexemaPosition); // слово не распознано
 			}
 
-			// Считывание строкового литерала
+			// Считывание строкового литерала '
 			if (source.text[i] == '\'')
 			{
 				tempWord[tempWordIndex++] = source.text[i++];
@@ -117,16 +117,16 @@ namespace LA
 			return true;
 
 		case '+':
-			Add(lexTable, { LEX_PLUS,str_number,idTable.size - 1 });
+			Add(lexTable, { LEX_PLUS,str_number,idTable.size - 1, token[0]});
 			return true;
 		case '-':
-			Add(lexTable, { LEX_MINUS, str_number, idTable.size - 1 });
+			Add(lexTable, { LEX_MINUS, str_number, idTable.size - 1, token[0]});
 			return true;
 		case '*':
-			Add(lexTable, { LEX_STAR, str_number, idTable.size - 1 });
+			Add(lexTable, { LEX_STAR, str_number, idTable.size - 1, token[0]});
 			return true;
 		case '/':
-			Add(lexTable, { LEX_DIRSLASH, str_number, idTable.size - 1 });
+			Add(lexTable, { LEX_DIRSLASH, str_number, idTable.size - 1, token[0]});
 			return true;
 
 		case 'f':
@@ -214,7 +214,7 @@ namespace LA
 					Add(lexTable, { LEX_LITERAL, str_number, i });
 				else
 				{
-					idTable.Add({ "\0", (idTable.GetEntry(lexTable.GetEntry(lexTable.size - 2).idxTI).id[0] != '\0' && lexTable.GetEntry(lexTable.size - 1).lexema == '=') ? idTable.GetEntry(lexTable.GetEntry(lexTable.size - 2).idxTI).id : idTable.GetLexemaName() , IT::IDDATATYPE::STR, IT::IDTYPE::L, lexTable.size });
+					idTable.Add({ "\0", (idTable.GetEntry(lexTable.GetEntry(lexTable.size - 2).idxTI).id[0] != '\0' && lexTable.GetEntry(lexTable.size - 1).lexema == '=') ? idTable.GetEntry(lexTable.GetEntry(lexTable.size - 2).idxTI).id : idTable.GetLexemaName() , IT::IDDATATYPE::STR, IT::IDTYPE::L, lexTable.size, str_number });
 					idTable.table[idTable.size - 1].value.vstr.len = 0;
 					int i = 0, j = 0;
 					for (; token[i] != '\0'; i++)
@@ -240,7 +240,7 @@ namespace LA
 					Add(lexTable, { LEX_LITERAL, str_number, i });
 				else
 				{
-					idTable.Add({ "\0", (idTable.GetEntry(lexTable.GetEntry(lexTable.size - 2).idxTI).id[0] != '\0' && lexTable.GetEntry(lexTable.size - 1).lexema == '=') ? idTable.GetEntry(lexTable.GetEntry(lexTable.size - 2).idxTI).id : idTable.GetLexemaName() , IT::IDDATATYPE::INT, IT::IDTYPE::L, lexTable.size });
+					idTable.Add({ "\0", (idTable.GetEntry(lexTable.GetEntry(lexTable.size - 2).idxTI).id[0] != '\0' && lexTable.GetEntry(lexTable.size - 1).lexema == '=') ? idTable.GetEntry(lexTable.GetEntry(lexTable.size - 2).idxTI).id : idTable.GetLexemaName() , IT::IDDATATYPE::INT, IT::IDTYPE::L, lexTable.size, str_number });
 					idTable.table[idTable.size - 1].value.vint = atoi(token);
 					Add(lexTable, { LEX_LITERAL,str_number, idTable.size - 1 });
 				}
@@ -266,7 +266,7 @@ namespace LA
 				if (lexTable.GetEntry(i).lexema == LEX_MAIN)
 					throw ERROR_THROW_IN(94, str_number, -1);
 
-			idTable.Add({ "\0", token, IT::IDDATATYPE::INT, IT::IDTYPE::F, lexTable.size });
+			idTable.Add({ "\0", token, IT::IDDATATYPE::INT, IT::IDTYPE::F, lexTable.size, str_number});
 			Add(lexTable, { LEX_MAIN, str_number, idTable.size - 1 });
 			return true;
 		}
@@ -275,16 +275,13 @@ namespace LA
 		if (lexTable.GetEntry(lexTable.size - 1).lexema == LEX_FUNCTION
 			&& lexTable.GetEntry(lexTable.size - 2).lexema == LEX_DATATYPE)
 		{
-			if(idTable.IsId(token) != -1)
-				throw ERROR_THROW_IN(95, str_number, -1);
-
 			switch (flagTypeVariable.type)
 			{
 			case TypeOfVar::INT:
-				idTable.Add({ "\0", token, IT::IDDATATYPE::INT, IT::IDTYPE::F, lexTable.size });
+				idTable.Add({ "\0", token, IT::IDDATATYPE::INT, IT::IDTYPE::F, lexTable.size,str_number, str_number });
 				break;
 			case TypeOfVar::STR:
-				idTable.Add({ "\0", token, IT::IDDATATYPE::STR, IT::IDTYPE::F, lexTable.size });
+				idTable.Add({ "\0", token, IT::IDDATATYPE::STR, IT::IDTYPE::F, lexTable.size,str_number, str_number });
 				break;
 			}
 
@@ -294,9 +291,44 @@ namespace LA
 			return true;
 		}
 
+		// Параметр функции
+		if (lexTable.GetEntry(lexTable.size - 1).lexema == 't')
+		{
+			for (int i = lexTable.size - 1; i > 0; i--)
+			{
+				if (lexTable.GetEntry(i).lexema == LEX_LEFTBRACE || lexTable.GetEntry(i).lexema == LEX_RIGHTBRACE)
+					break;
+				if (lexTable.GetEntry(i - 2).lexema == LEX_DATATYPE
+					&& lexTable.GetEntry(i - 1).lexema == LEX_FUNCTION
+					&& lexTable.GetEntry(i).lexema == LEX_ID
+					&& idTable.GetEntry(lexTable.GetEntry(i).idxTI).idtype == IT::IDTYPE::F)
+				{
+					//if (idTable.IsId(token, idTable.GetEntry(lexTable.GetEntry(i).idxTI).id) != -1) // нужно исправить поиск родителя для перегрузки
+					//	throw ERROR_THROW_IN(96, str_number, -1);
+
+					switch (flagTypeVariable.type)
+					{
+					case TypeOfVar::INT:
+						idTable.Add({ idTable.GetEntry(lexTable.GetEntry(i).idxTI).id, token, IT::IDDATATYPE::INT, IT::IDTYPE::P, lexTable.size, str_number });
+						idTable.table[(lexTable.GetEntry(i).idxTI)].parmQuantity++;
+						break;
+					case TypeOfVar::STR:
+						idTable.Add({ idTable.GetEntry(lexTable.GetEntry(i).idxTI).id, token, IT::IDDATATYPE::STR, IT::IDTYPE::P, lexTable.size, str_number });
+						idTable.table[(lexTable.GetEntry(i).idxTI)].parmQuantity++;
+						break;
+					}
+
+					flagTypeVariable.type = TypeOfVar::DEF;
+					Add(lexTable, { LEX_ID, str_number, idTable.size - 1 });
+
+					return true;
+				}
+			}
+		}
+
 		// Переменная
 		if (lexTable.GetEntry(lexTable.size - 1).lexema == LEX_DATATYPE
-			&& lexTable.GetEntry(lexTable.size - 2).lexema == LEX_DECLARE)
+			&& lexTable.GetEntry(lexTable.size - 2).lexema == LEX_DECLARE || lexTable.GetEntry(lexTable.size - 1).lexema == 't')
 		{
 			for (int i = lexTable.size - 1; i >= 0; i--)
 			{
@@ -304,16 +336,16 @@ namespace LA
 				if ((lexTable.GetEntry(i).lexema == LEX_ID || lexTable.GetEntry(i).lexema == LEX_MAIN)
 					&& idTable.GetEntry(lexTable.GetEntry(i).idxTI).idtype == IT::IDTYPE::F)
 				{
-					if (idTable.IsId(token, idTable.GetEntry(lexTable.GetEntry(i).idxTI).id) != -1)
-						throw ERROR_THROW_IN(96, str_number, -1);
+					//if (idTable.IsId(token, idTable.GetEntry(lexTable.GetEntry(i).idxTI).id) != -1)  // нужно исправить поиск родителя для перегрузки
+					//	throw ERROR_THROW_IN(96, str_number, -1);
 
 					switch (flagTypeVariable.type)
 					{
 					case TypeOfVar::INT:
-						idTable.Add({ idTable.GetEntry(lexTable.GetEntry(i).idxTI).id, token, IT::IDDATATYPE::INT, IT::IDTYPE::V, lexTable.size });
+						idTable.Add({ idTable.GetEntry(lexTable.GetEntry(i).idxTI).id, token, IT::IDDATATYPE::INT, IT::IDTYPE::V, lexTable.size, str_number });
 						break;
 					case TypeOfVar::STR:
-						idTable.Add({ idTable.GetEntry(lexTable.GetEntry(i).idxTI).id, token, IT::IDDATATYPE::STR, IT::IDTYPE::V, lexTable.size });
+						idTable.Add({ idTable.GetEntry(lexTable.GetEntry(i).idxTI).id, token, IT::IDDATATYPE::STR, IT::IDTYPE::V, lexTable.size, str_number });
 						break;
 					}
 
@@ -325,38 +357,7 @@ namespace LA
 			}
 		}
 
-		// Параметр функции
-		if (lexTable.GetEntry(lexTable.size - 1).lexema == 't')
-		{
-			for (int i = lexTable.size - 1; i > 0; i--)
-			{
-				if (lexTable.GetEntry(i - 2).lexema == LEX_DATATYPE
-					&& lexTable.GetEntry(i - 1).lexema == LEX_FUNCTION
-					&& lexTable.GetEntry(i).lexema == LEX_ID
-					&& idTable.GetEntry(lexTable.GetEntry(i).idxTI).idtype == IT::IDTYPE::F)
-				{
-					if (idTable.IsId(token, idTable.GetEntry(lexTable.GetEntry(i).idxTI).id) != -1)
-						throw ERROR_THROW_IN(96, str_number, -1);
-
-					switch (flagTypeVariable.type)
-					{
-					case TypeOfVar::INT:
-						idTable.Add({ idTable.GetEntry(lexTable.GetEntry(i).idxTI).id, token, IT::IDDATATYPE::INT, IT::IDTYPE::P, lexTable.size });
-						idTable.table[(lexTable.GetEntry(i).idxTI)].parmQuantity++;
-						break;
-					case TypeOfVar::STR:
-						idTable.Add({ idTable.GetEntry(lexTable.GetEntry(i).idxTI).id, token, IT::IDDATATYPE::STR, IT::IDTYPE::P, lexTable.size });
-						idTable.table[(lexTable.GetEntry(i).idxTI)].parmQuantity++;
-						break;
-					}
-
-					flagTypeVariable.type = TypeOfVar::DEF;
-					Add(lexTable, { LEX_ID, str_number, idTable.size - 1 });
-
-					return true;
-				}
-			}
-		}
+		
 		bool LeftBrace = false;
 		for (int i = lexTable.size - 1; i >= 0; i--)
 		{
@@ -369,6 +370,7 @@ namespace LA
 				if (temp != -1)
 				{
 					Add(lexTable, { LEX_ID,str_number,temp });
+					idTable.table[temp].refCount++;
 					return true;
 				}
 				else

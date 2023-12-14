@@ -37,6 +37,8 @@ namespace In
 		in.text = new unsigned char[in.size];
 		while (ifs.good())
 		{
+			if (c == '\t')
+				c = ' ';
 			if (in.code[c] == IN::F)
 			{
 				throw ERROR_THROW_IN(111, in.lines, posInLine);

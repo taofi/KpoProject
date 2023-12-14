@@ -6,39 +6,41 @@
 #include <locale>
 #include "tchar.h"
 #include "GRB.h"
-#include "LexAnalysis.h"
+#include "Log.h"
+
+#include "LexAnalysis2.h"
 
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
 #define MFST_DIAGN_NUMBER 3
 
-#define MFST_TRACE_START	std::cout << std::setw(4) << std::left << "Шаг" << ": " \
+#define MFST_TRACE_START	*log.stream << std::setw(4) << std::left << "Шаг" << ": " \
 									  << std::setw(20) << std::left << "Правило" \
 									  << std::setw(30) << std::left << "Входная лента" \
 									  << std::setw(20) << std::left << "Стек" \
 									  << std::endl;
 
-#define MFST_TRACE1		std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " \
+#define MFST_TRACE1		*logR.stream  << std::setw(4) << std::left << ++FST_TRACE_n << ": " \
 								  << std::setw(20) << std::left << rule.getCRule(rbuf, nrulechain) \
 								  << std::setw(30) << std::left << getCLenta(lbuf, lenta_position) \
 								  << std::setw(20) << std::left << getCSt(sbuf) \
 								  << std::endl;
 
-#define MFST_TRACE2		std::cout << std::setw(4) << std::left << FST_TRACE_n<<": " \
+#define MFST_TRACE2		*logR.stream  << std::setw(4) << std::left << FST_TRACE_n<<": " \
 								  << std::setw(20) << std::left << " " \
 								  << std::setw(30) << std::left << getCLenta(lbuf, lenta_position) \
 								  << std::setw(20) << std::left << getCSt(sbuf) \
 								  << std::endl;
 
-#define MFST_TRACE3		std::cout << std::setw(4) << std::left << ++FST_TRACE_n <<": " \
+#define MFST_TRACE3		*logR.stream  << std::setw(4) << std::left << ++FST_TRACE_n <<": " \
 								  << std::setw(20) << std::left << " " \
 								  << std::setw(30) << std::left << getCLenta(lbuf, lenta_position) \
 								  << std::setw(20) << std::left << getCSt(sbuf) \
 								  << std::endl;
 
-#define MFST_TRACE4(c)	std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " << std::setw(20) << std::left << c <<std::endl; 
-#define MFST_TRACE5(c)	std::cout << std::setw(4) << std::left << FST_TRACE_n << ": " << std::setw(20) << std::left << c << std::endl; 
-#define MFST_TRACE6(c, k)	std::cout << std::setw(4) << std::left << FST_TRACE_n << ": " << std::setw(20) << std::left << c << k << std::endl; 
-#define MFST_TRACE7		std::cout << std::setw(4) << std::left << state.lenta_position << ": " \
+#define MFST_TRACE4(c)	*logR.stream  << std::setw(4) << std::left << ++FST_TRACE_n << ": " << std::setw(20) << std::left << c <<std::endl; 
+#define MFST_TRACE5(c)	*logR.stream << std::setw(4) << std::left << FST_TRACE_n << ": " << std::setw(20) << std::left << c << std::endl; 
+#define MFST_TRACE6(c, k)	*logR.stream  << std::setw(4) << std::left << FST_TRACE_n << ": " << std::setw(20) << std::left << c << k << std::endl; 
+#define MFST_TRACE7		*logR.stream  << std::setw(4) << std::left << state.lenta_position << ": " \
 								  << std::setw(20) << std::left << rule.getCRule(rbuf, state.nrulechain) \
 								  << std::endl;
 typedef std::stack<short> MFSTSTACK;		// стек автомата
@@ -98,12 +100,12 @@ namespace MFST
 		short nrulechain;				// номер текущей цепочки, текущего правила
 		short lenta_size;				// размер ленты
 		GRB::Greibach grebach;			// грамматика Грейбах
-		LA::Tables lex;					// результат работы лексического анализатора
+		LEXA::Tables lex;					// результат работы лексического анализатора
 		MFSTSTACK st;					// стек автомата
 		std::stack<MfstState> storestate;	// стек для сохранения состояний 
 		Mfst();
 		Mfst(
-			LA::Tables plex,					// результат работы лексического анализатора
+			LEXA::Tables plex,					// результат работы лексического анализатора
 			GRB::Greibach pgrebach		// грамматика Грейбах
 		);
 		char* getCSt(char* buf);		// получить содержимое стека
@@ -115,7 +117,7 @@ namespace MFST
 			GRB::Rule::Chain chain		// цепочка правила
 		);
 		RC_STEP step();					// выполнить шаг автомата
-		bool start();					// запустить автомат
+		bool start(Log::LOG &logref);					// запустить автомат
 		bool savediagnosis(
 			RC_STEP pprc_step			// код завершения шага
 		);

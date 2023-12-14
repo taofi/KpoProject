@@ -7,6 +7,7 @@ lbuf[1024];	// для ленты
 #define NS(n)	GRB::Rule::Chain::N(n)
 #define TS(n)	GRB::Rule::Chain::T(n)
 #define ISNS(n)	GRB::Rule::Chain::isN(n)
+Log::LOG logR;
 
 namespace MFST
 {
@@ -49,7 +50,7 @@ namespace MFST
 	};
 
 	Mfst::Mfst() { lenta = 0; lenta_size = lenta_position = 0; };
-	Mfst::Mfst(LA::Tables plex, GRB::Greibach pgrebach)
+	Mfst::Mfst(LEXA::Tables plex, GRB::Greibach pgrebach)
 	{
 		grebach = pgrebach;
 		lex = plex;
@@ -158,8 +159,9 @@ namespace MFST
 		return rc;
 	};
 
-	bool Mfst::start()
+	bool Mfst::start(Log::LOG &logref)
 	{
+		logR = logref;
 		bool rc = false;
 		RC_STEP rc_step = SURPRISE;
 		char buf[MFST_DIAGN_MAXSIZE];
@@ -175,23 +177,31 @@ namespace MFST
 		case LENTA_END:			MFST_TRACE4("------>LENTA_END")
 			if (st.top() == '$')
 			{
-				cout << "--------------------------------------------------------------------------" << endl;
+				std::cout << "--------------------------------------------------------------------------\n";
 				sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d всего строк %d, синтаксический анализ выполнен без ошибок", 0, lenta_size);
-				cout << setw(4) << left << 0 << ": всего строк " << lenta_size << ", синтаксический анализ выполнен без ошибок" << endl;
-				cout << "--------------------------------------------------------------------------" << endl;
+				std::cout << std::setw(4) << std::left << 0 << ": всего строк " << lenta_size << ", синтаксический анализ выполнен без ошибок\n";
+				std::cout << "--------------------------------------------------------------------------\n";
+				
+				*logR.stream << "--------------------------------------------------------------------------\n";
+				*logR.stream << std::setw(4) << std::left << 0 << ": всего строк " << lenta_size << ", синтаксический анализ выполнен без ошибок\n";
+				*logR.stream << "--------------------------------------------------------------------------\n";
+				
 				rc = true;
+
 			}
 			else
 			{
-				throw Error::geterrorin(600, 0, 0);
+				
+				throw ERROR_THROW_IN(600, 0, 0);
 			}
 					  //}
 					  break;
 
 		case NS_NORULE:			MFST_TRACE4("------>NS_NURULE")// не найдено правило грамматики (ошибка в грамматике)
-			cout << "--------------------------------------------------------------------------" << endl;
-			cout << getDiagnosis(0, buf) << endl;
-			throw Error::geterrorin(608, 0, 0);
+			std::cout << "--------------------------------------------------------------------------\n";
+			std::cout << getDiagnosis(0, buf) << std::endl;
+			*logR.stream << "--------------------------------------------------------------------------\n";
+			*logR.stream << getDiagnosis(0, buf) << std::endl;
 
 			break;
 		case NS_NORULECHAIN:	MFST_TRACE4("------>NS_NURULENORULECHAIN") break;// не найдена подходящая цепочка правила (ошибка в исходном коде)
@@ -230,6 +240,7 @@ namespace MFST
 			errid = grebach.getRule(diagnosis[n].nrule).iderror;
 			Error::ERROR err = Error::geterror(errid);
 			sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: строка %d, %s", err.id, lex.LexTable.table[lpos].sn, err.message);
+			throw ERROR_THROW_IN(err.id, lex.LexTable.table[lpos].sn, -1);
 			rc = buf;
 		};
 		return rc;

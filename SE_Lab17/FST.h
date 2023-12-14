@@ -16,6 +16,7 @@ namespace FST
 		RELATION* relations;
 		NODE();
 		NODE(short n, RELATION rel, ...);
+		NODE(short n, RELATION *rel);
 	};
 
 	struct FST {
@@ -24,7 +25,9 @@ namespace FST
 		short nstates;
 		NODE* nodes;
 		short* rstates;
+		FST();
 		FST(const char* s, short ns, NODE n, ...);
+		FST(const char* s, short ns, NODE n[]);
 	};
 
 	bool execute(FST& fst);

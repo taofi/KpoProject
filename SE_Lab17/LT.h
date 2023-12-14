@@ -1,6 +1,7 @@
 #pragma once
 #pragma once
 #include "IT.h"
+#include "OperatorTable.h"
 #define LEXEMA_FIXSIZE  1			// фиксированный размер лексемы
 #define	LT_MAXSIZE		4096		// максимальное количество строк в таблице лексем	
 #define	LT_TI_NULLXDX	-1			// нет элемента таблицы идентификаторов		
@@ -25,6 +26,7 @@
 #define	LEX_MINUS		'v'			// лексема для -
 #define	LEX_STAR		'v'			// лексема для *
 #define	LEX_DIRSLASH	'v'			// лексема для /
+#define LEX_OPERATOR	'v'
 #define	LEX_EQUAL_SIGN	'='			// лексема для =
 
 #define PLUS '+'
@@ -40,8 +42,10 @@ namespace LT									// таблица лексем
 		char lexema;							// лексема
 		int sn;									// номер строки в исходном тексте
 		int idxTI;								// индекс в таблице идентификаторов или LT_TI_NULLIDX
+		OT::OEntry* opr;								// символ оператора 
 		Entry();
 		Entry(const char lex, int str_n, int idxTI);
+		Entry(const char lex, int str_n, int idxTI, char oSymbol);
 	};
 
 	struct LexTable								// экзепляр таблицы лексем
@@ -49,13 +53,16 @@ namespace LT									// таблица лексем
 		int maxsize;							// ёмкость таблицы лексем < LT_MAXSIZE
 		int size;								// текущий размер таблицы лексем < maxsize
 		Entry* table;							// массив строк таблицы лексем
-
 		Entry GetEntry(								// получить строку таблицы лексем
 			int n									// номер получаемой строки
 		);
 
 		void PrintLexTable(const wchar_t* in);		// вывод таблицы лексем
+		void UnformattedPrintLexTable(const wchar_t* in);
 		LexTable();
+		void Add(									// добавить строку в таблицу лексем
+			Entry entry								// строка таблицы лексем
+		);
 	};
 
 	void Add(									// добавить строку в таблицу лексем

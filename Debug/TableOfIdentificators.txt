@@ -1,44 +1,48 @@
 ------------------ Литералы ------------------
- Идентификатор:      Тип данных:      Значение:              Длина строки:   Первое вхождение:
-   0_l			INT 		1			-		66
-   1_l			INT 		3			-		68
-   x			INT 		1			-		115
-   y			INT 		5			-		119
-   sa			STR 	    '1234567890'                12		123
-   sb			STR 	    '1234567890'                12		127
-   2_l			STR 	    'jd'                         4		130
-   3_l			INT 		0			-		157
+ Идентификатор:      Тип данных:      Значение:              Длина строки:          Первое вхождение:
+  10  l_0             INT               0                          -                         15
+  13  l_1             INT             564                          -                         29
+  14  l_2             INT              10                          -                         31
+  16  l_3             INT             123                          -                         44
+  18  l_4             STR           '123'                          5                         65
+  21  l_5             INT               2                          -                         77
+  22  l_6             INT               3                          -                         79
+  25  l_7             INT              15                          -                         88
+  26  l_8             INT               3                          -                         96
+  27  l_9             INT             290                          -                         98
+  30  l_10             INT              10                          -                        116
+  31  l_11             INT               0                          -                        122
+  32  l_12             INT               1                          -                        129
 
 
 
 ------------------ Функции ------------------
- Идентификатор:      Тип данных возврата:   Количество переданных параметров:     Первое вхождение:
-   fi                      INT 				2				2
-   fs                      STR 				2				32
-   substr                  STR 				3				48
-   main                    INT 				0				78
-   strlen                  INT 				1				107
-
+ Идентификатор:      Тип данных возврата:   Количество переданных параметров:     Первое вхождение:             параметры
+   0  console1s            NODEF                                     1                    -1      STR 
+   1  sqrt1i                  INT                                    1                    -1      INT 
+   2  pow2ii                  INT                                    2                    -1      INT INT 
+   3  concat2ss               STR                                    2                    -1      STR STR 
+   4  itos1i                  STR                                    1                    -1      INT 
+   5  strsize1s               INT                                    1                    -1      STR 
+   6  tomas0               NODEF                                     0                    -1
+   7  fi1i                    STR                                    1                     2      INT 
+  11  intLv21i                INT                                    1                    19      INT 
+  19  main0                   STR                                    0                    68
+       
 
 
 ------------------ Переменные ------------------
  Имя родительского блока:      Идентификатор:     Тип данных:     Тип идентификатора:    Первое вхождение:
-   fi                                x                INT               P			5
-   fi                                y                INT               P			8
-   fi                                z                INT               V			13
-   fs                                a                STR               P			35
-   fs                                b                STR               P			38
-   fs                                c                STR               V			43
-   substr                            a                STR               P			51
-   substr                            p                INT               P			54
-   substr                            n                INT               P			57
-   main                              x                INT               V			82
-   main                              y                INT               V			86
-   main                              z                INT               V			90
-   main                             sa                STR               V			94
-   main                             sb                STR               V			98
-   main                             sc                STR               V			102
-   strlen                            p                STR               P			110
+   8                fi                   y                INT               P                    5
+   9                fi                   x                INT               V                    9
+  12            intLv2                 asd                INT               P                   22
+  15                fi                   z                INT               V                   38
+  17                fi                   l                STR               V                   50
+  20              main                   y                INT               V                   71
+  23              main                   z                STR               V                   83
+  24              main              asd123                INT               V                   86
+  28              main                  l2                STR               V                  101
+  29              main                   f                INT               V                  114
 
 
 

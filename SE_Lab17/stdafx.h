@@ -27,4 +27,3 @@ using namespace std;
 #include "FST.h"
 #include "IT.h"
 #include "LT.h"
-#include "LexAnalysis.h"

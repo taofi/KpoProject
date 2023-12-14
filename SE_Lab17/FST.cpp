@@ -20,6 +20,20 @@ FST::NODE::NODE(short n, RELATION rel, ...)
 	for (short i = 0; i < n; i++) relations[i] = p[i];
 }
 
+FST::NODE::NODE(short n, RELATION *rel)
+{
+	n_relation = n;
+	relations = new RELATION[n];
+	for (short i = 0; i < n; i++)
+		relations[i] = rel[i];
+}
+
+FST::FST::FST()
+{
+
+}
+
+
 FST::FST::FST(const char* s, short ns, NODE n, ...) {
 	position = -1;
 	string = s;
@@ -29,6 +43,17 @@ FST::FST::FST(const char* s, short ns, NODE n, ...) {
 	NODE* p = &n;
 	for (int k = 0; k < ns; k++) nodes[k] = p[k];
 
+	rstates = new short[nstates];
+	memset(rstates, 0Xff, sizeof(short) * nstates);
+	rstates[0] = 0;
+}
+
+FST::FST::FST(const char* s, short ns, NODE n[]) {
+	position = -1;
+	string = s;
+	nstates = ns;
+	nodes = new NODE[ns];
+	for (int k = 0; k < ns; k++) nodes[k] = n[k];
 	rstates = new short[nstates];
 	memset(rstates, 0Xff, sizeof(short) * nstates);
 	rstates[0] = 0;

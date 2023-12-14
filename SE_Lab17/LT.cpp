@@ -16,6 +16,13 @@ namespace LT
 
 		lextable.table[lextable.size++] = entry;
 	}
+	void LexTable::Add(Entry entry)
+	{
+		if (size >= maxsize)
+			throw ERROR_THROW(60);
+
+		table[size++] = entry;
+	}
 	Entry LexTable::GetEntry(int n)
 	{
 		if (n >= 0 && n < maxsize)
@@ -34,7 +41,7 @@ namespace LT
 			throw ERROR_THROW(63);
 
 		int num_string = 0;
-
+		lexStream << ++num_string << " ";
 		for (int i = 0; i < size;)
 		{
 			if (num_string == table[i].sn) {
@@ -42,9 +49,23 @@ namespace LT
 				continue;
 			}
 			
-			lexStream << '\n' << ++num_string << ".\t";
+			lexStream << '\n' << ++num_string << " ";
 		}
 
+		lexStream.close();
+	}
+
+	void LexTable::UnformattedPrintLexTable(const wchar_t* in)
+	{
+		ofstream lexStream(in);
+
+		if (!lexStream.is_open())
+			throw ERROR_THROW(63);
+
+		for (int i = 0; i < size; i++)
+		{
+			lexStream << table[i].lexema;
+		}
 		lexStream.close();
 	}
 
@@ -60,5 +81,13 @@ namespace LT
 		lexema = lex;
 		sn = str_n;
 		this->idxTI = idxTI;
+		opr = nullptr;
 	}
+	/*LT::Entry::Entry(const char lex, int str_n, int idxTI, char oSymbol)
+	{
+		lexema = lex;
+		sn = str_n;
+		this->idxTI = idxTI;
+		this->oSymbol = oSymbol;
+	}*/
 }

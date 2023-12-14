@@ -9,35 +9,38 @@ namespace GRB
 		6,
 
 		Rule(NS('S'), GRB_ERROR_SERIES + 0,						// Синтаксическая ошибка. Неверная структура программы
-			3,
-			Rule::Chain(8, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';')),
-			Rule::Chain(14, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';'), NS('S')),
-			Rule::Chain(9, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';'), NS('S'))
-
+			4,
+			Rule::Chain(4, TS('m'), TS('{'), NS('N'), TS('}')),
+			Rule::Chain(8, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), NS('S')),
+			Rule::Chain(9, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('}')),
+			Rule::Chain(10, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('}'), NS('S')),
+			Rule::Chain(13, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), NS('S'))
+			//Rule::Chain(15, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('d'), NS('S'), TS('r'), NS('E'), TS(';'), TS('}'), NS('S'))
 		),
 
 		Rule(NS('N'), GRB_ERROR_SERIES + 1,					// Синтаксическая ошибка. Ошибочный оператор
-			14,
-			Rule::Chain(4, TS('d'), TS('t'), TS('i'), TS(';')),
-			Rule::Chain(7, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')')),
-			Rule::Chain(3, TS('p'), TS('i'), TS(';')),
-			Rule::Chain(3, TS('p'), TS('l'), TS(';')),
+			16,
+			Rule::Chain(3, TS('t'), TS('i'), TS(';')),
 			Rule::Chain(3, TS('r'), NS('E'), TS(';')),
+			Rule::Chain(3, TS('{'), NS('N'), TS('}')),
 			Rule::Chain(4, TS('i'), TS('='), NS('E'), TS(';')),
-			Rule::Chain(8, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';')),
-			Rule::Chain(5, TS('d'), TS('t'), TS('i'), TS(';'), NS('N')),
-			Rule::Chain(8, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), NS('N')),
-			Rule::Chain(4, TS('p'), TS('i'), TS(';'), NS('N')),
-			Rule::Chain(4, TS('p'), TS('l'), TS(';'), NS('N')),
-			Rule::Chain(4, TS('r'), NS('E'), TS(';'), NS('N')),
+			Rule::Chain(4, TS('i'), TS('('), TS(')'), TS(';')),
+			Rule::Chain(5, TS('t'), TS('i'), TS('='), NS('E'), TS(';')),
+			Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), TS(';')),
+			Rule::Chain(4, TS('t'), TS('i'), TS(';'), NS('N')),
+			Rule::Chain(4, TS('{'), NS('N'), TS('}'), NS('N')),
+			Rule::Chain(5, TS('w'), TS('('), NS('E'), TS(')'), NS('N')),
 			Rule::Chain(5, TS('i'), TS('='), NS('E'), TS(';'), NS('N')),
-			Rule::Chain(9, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';'), NS('N'))
-			//Rule::Chain(9, TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';'), NS('N'), TS('}'), TS(';'))
-			//Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), TS(';'), NS('N'))
+			Rule::Chain(5, TS('i'), TS('('), TS(')'), TS(';'), NS('N')),
+			Rule::Chain(6, TS('i'), TS('('), NS('W'), TS(')'), TS(';'), NS('N')),
+			Rule::Chain(6, TS('t'), TS('f'), TS('i'), TS('('), TS(')'), NS('N')),
+			Rule::Chain(6, TS('t'), TS('i'), TS('='), NS('E'), TS(';'), NS('N')),
+			Rule::Chain(7, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), NS('N'))
+			
 		),
 
 		Rule(NS('E'), GRB_ERROR_SERIES + 2,					//Синтаксическая ошибка. Ошибка в выражении
-			8,
+			9,
 			Rule::Chain(1, TS('i')),
 			Rule::Chain(1, TS('l')),
 			Rule::Chain(3, TS('('), NS('E'), TS(')')),
@@ -46,7 +49,6 @@ namespace GRB
 			Rule::Chain(2, TS('i'), NS('M')),
 			Rule::Chain(2, TS('l'), NS('M')),
 			Rule::Chain(4, TS('('), NS('E'), TS(')'), NS('M')),
-			//Rule::Chain(4, TS('i'), TS('('), TS(')'), NS('M')),
 			Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), NS('M'))
 
 
@@ -62,6 +64,7 @@ namespace GRB
 
 		Rule(NS('F'), GRB_ERROR_SERIES + 4, // Синтаксическая ошибка. Ошибка в параметрах функции
 			2,
+			//Rule::Chain(0, TS('t')),
 			Rule::Chain(2, TS('t'), TS('i')),
 			Rule::Chain(4, TS('t'), TS('i'), TS(','), NS('F'))
 		),
@@ -73,8 +76,6 @@ namespace GRB
 			Rule::Chain(3, TS('i'), TS(','), NS('W')),
 			Rule::Chain(3, TS('l'), TS(','), NS('W'))
 		)
-
-
 
 	);
 }

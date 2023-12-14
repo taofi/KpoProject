@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <cmath>
 
 namespace IT
 {
@@ -8,110 +9,88 @@ namespace IT
 		maxsize = TI_MAXSIZE;
 		size = 0;
 		table = new Entry[TI_MAXSIZE];
+		literalCount = 0;
+		funCount = 0;
+		varCount = 0;
 	}
 	Entry::Entry()
 	{
-		parrent_function[0] = '\0';
+		//parrent_function[0] = '\0';
 		id[0] = '\0';
+		//uId[0] = '\0';
 		firstApi = 0;
 		iddatatype = IT::IDDATATYPE::DEF;
 		idtype = IT::IDTYPE::D;
-		parmQuantity = 0;
+		str_number = 0;
+		refCount = 0;
+		indexPF = 0;
+	}
+	void Entry::AddParm(IDDATATYPE iddatatype)
+	{
+		value.parm.type[value.parm.parmQuantity++] = iddatatype;
 	}
 
-	Entry::Entry(const char* parrent_function, const char* id, IDDATATYPE iddatatype, IDTYPE idtype, int first)
+	Entry::Entry(const char* id, IDDATATYPE iddatatype, IDTYPE idtype, int first, int str_number)
 	{
 		int i = 0;
-		if (parrent_function)
-			for (i = 0; parrent_function[i] != '\0'; i++)
-				this->parrent_function[i] = parrent_function[i];
-		this->parrent_function[i] = '\0';
+		//this->parrent_function[0] = '\0';
 		i = 0;
 		if (id)
 			for (i = 0; id[i] != '\0'; i++)
+			{
 				this->id[i] = id[i];
-
+			//	this->uId[i] = id[i];
+			}
+		if (idtype == F || idtype == DF)
+			value.parm.parmQuantity = 0;
+		//delete(id);
+		this->str_number = str_number;
 		this->firstApi = first;
 		this->id[i] = '\0';
+		//this->uId[i] = '\0';
 		this->iddatatype = iddatatype;
 		this->idtype = idtype;
-		this->parmQuantity = 0;
+		this->refCount = 0;
+		indexPF = 0;
 	}
-	Entry::Entry(const char* parrent_function, const char* id, IDDATATYPE iddatatype, IDTYPE idtype, int first, int it)
+
+	Entry::Entry(const char* id, IDDATATYPE iddatatype, IDTYPE idtype, int first, const char* ch, int str_number)
 	{
 		int i = 0;
-		if (parrent_function)
-			for (i = 0; parrent_function[i] != '\0'; i++)
-				this->parrent_function[i] = parrent_function[i];
-		this->parrent_function[i] = '\0';
+		//this->parrent_function[0] = '\0';
 		i = 0;
 		if (id)
 			for (i = 0; id[i] != '\0'; i++)
+			{
 				this->id[i] = id[i];
-
+				//this->uId[i] = '\0';
+			}
+		this->str_number = str_number;
 		this->firstApi = first;
 		this->id[i] = '\0';
+		//this->uId[i] = '\0';
 		this->iddatatype = iddatatype;
 		this->idtype = idtype;
-		this->parmQuantity = 0;
-		this->value.vint = it;
-	}
-	Entry::Entry(const char* parrent_function, const char* id, IDDATATYPE iddatatype, IDTYPE idtype, int first, char* ch)
-	{
-		int i = 0;
-		if (parrent_function)
-			for (i = 0; parrent_function[i] != '\0'; i++)
-				this->parrent_function[i] = parrent_function[i];
-		this->parrent_function[i] = '\0';
-		i = 0;
-		if (id)
-			for (i = 0; id[i] != '\0'; i++)
-				this->id[i] = id[i];
-
-		this->firstApi = first;
-		this->id[i] = '\0';
-		this->iddatatype = iddatatype;
-		this->idtype = idtype;
-		this->parmQuantity = 0;
-		strcpy_s(this->value.vstr.str, 255, ch);
-		this->value.vstr.len = strlen(ch);
-	}
-	Entry::Entry(const char* parrent_function, const char* id, IDDATATYPE iddatatype, IDTYPE idtype, int first, const char* ch)
-	{
-		int i = 0;
-		if (parrent_function)
-			for (i = 0; parrent_function[i] != '\0'; i++)
-				this->parrent_function[i] = parrent_function[i];
-		this->parrent_function[i] = '\0';
-		i = 0;
-		if (id)
-			for (i = 0; id[i] != '\0'; i++)
-				this->id[i] = id[i];
-
-		this->firstApi = first;
-		this->id[i] = '\0';
-		this->iddatatype = iddatatype;
-		this->idtype = idtype;
-		this->parmQuantity = 0;
-		strcpy_s(this->value.vstr.str, 255, ch);
-		this->value.vstr.len = strlen(ch);
-	}
-	Entry::Entry(char* parrent_function, char* id, IDDATATYPE iddatatype, IDTYPE idtype)
-	{
-		int i = 0;
-		if (parrent_function)
-			for (i = 0; parrent_function[i] != '\0'; i++)
-				this->parrent_function[i] = parrent_function[i];
-		this->parrent_function[i] = '\0';
-		i = 0;
-		if (id)
-			for (i = 0; id[i] != '\0'; i++)
-				this->id[i] = id[i];
-
-		this->id[i] = '\0';
-		this->iddatatype = iddatatype;
-		this->idtype = idtype;
-		this->parmQuantity = 0;
+		refCount = 0;
+		//strcpy_s(this->value.vstr.str, 255, ch);
+		if (iddatatype == STR || iddatatype == BOOL)
+		{
+			this->value.vstr.len = strlen(ch);
+			for (i = 0; i < value.vstr.len; i++)
+				value.vstr.str[i] = ch[i];
+			value.vstr.str[i] = '\0';
+		}
+		else if (iddatatype == INT)
+		{
+			value.vint = 0;
+			int size = strlen(ch);
+			for (int i = 0; i < size; i++)
+			{
+				value.vint += (ch[i] - '0') * pow(10, size - i - 1);
+			}
+		}
+		
+		indexPF = 0;
 	}
 
 	IdTable Create(int size)
@@ -122,6 +101,7 @@ namespace IT
 		id_table.table = new Entry[TI_MAXSIZE];
 		return id_table;
 	}
+	
 	void IdTable::Add(Entry entry)
 	{
 		if (strlen(entry.id) > ID_MAXSIZE && entry.idtype != IDTYPE::F)
@@ -129,33 +109,20 @@ namespace IT
 
 		if(size >= maxsize)
 			throw ERROR_THROW(66);
-
-		if (entry.idtype != IDTYPE::F)
-			entry.id[5] = '\0';
-
-		table[size] = entry;
-			
-		switch (entry.iddatatype)
-		{
-			case IDDATATYPE::INT:
-			{
-				table[size].value.vint = TI_INT_DEFAULT;
-				break;
-			}
-			case IDDATATYPE::STR:
-			{
-				table[size].value.vstr.str[0] = TI_STR_DEFAULT;
-				table[size].value.vstr.len = 0;
-				break;
-			}
-		}
-
-		size++;
+		table[size ++] = entry;
 	}
 	Entry IdTable::GetEntry(int n)
 	{
 		if (n >= 0 && n < maxsize)
 			return table[n];
+	}
+	int IdTable::IsFirstApi(int FirstApi)
+	{
+		for (int i = 0; i < size; i++)
+			if (table[i].firstApi == FirstApi)
+				return i;
+
+		return TI_NULLIDX;
 	}
 	int IdTable::IsId(const char id[ID_MAXSIZE])
 	{
@@ -165,15 +132,8 @@ namespace IT
 
 		return TI_NULLIDX;
 	}
-	int IdTable::IsId(const char id[ID_MAXSIZE], const char parrent_function[ID_MAXSIZE + 5])
-	{
-		for (int i = 0; i < size; i++)
-			if ((strcmp(this->table[i].id, id) == 0) &&
-				(strcmp(this->table[i].parrent_function, parrent_function) == 0))
-				return i;
+	
 
-		return TI_NULLIDX;
-	}
 	void Delete(IdTable& idtable)
 	{
 		delete[] idtable.table;
@@ -197,20 +157,24 @@ namespace IT
 			throw ERROR_THROW(64);
 
 		idStream << "------------------ Литералы ------------------" << endl;
-		idStream << setw(15) << "Идентификатор:" << setw(17) << "Тип данных:" << setw(15) << "Значение:" << setw(27) << "Длина строки:" << setw(20) << "Первое вхождение:" << endl;
+		idStream << setw(15) << "Идентификатор:" << setw(17) << "Тип данных:" << setw(15) << "Значение:" << setw(27) << "Длина строки:" << setw(27) << "Первое вхождение:" << endl;
 
 		for (int i = 0; i < size; i++)
 		{
 			if (table[i].idtype == IT::IDTYPE::L)
 			{
+				idStream << setw(4) << i << "  ";
 				cout.width(25);
 				switch (table[i].iddatatype)
 				{
 				case IDDATATYPE::INT:
-					idStream << "   " << this->table[i].id << "\t\t\t" << "INT " << "\t\t" << table[i].value.vint << "\t\t\t" << "-\t\t" << table[i].firstApi << endl;
+					idStream << this->table[i].id << setw(17) << "INT " << setw(15) << table[i].value.vint << setw(27) << "-" << setw(27) << table[i].firstApi << endl;
 					break;
 				case IDDATATYPE::STR:
-					idStream << "   " << this->table[i].id << "\t\t\t" << "STR " << "\t    " << table[i].value.vstr.str << setw(30 - strlen(table[i].value.vstr.str)) << (int)table[i].value.vstr.len << "\t\t" << table[i].firstApi << endl;
+					idStream << this->table[i].id << setw(17) << "STR " << setw(15) << table[i].value.vstr.str << setw(27) << (int)table[i].value.vstr.len << setw(27) << table[i].firstApi << endl;
+					break;
+				case IDDATATYPE::BOOL:
+					idStream << this->table[i].id << setw(17) << "BOOL " << setw(15) << table[i].value.vstr.str << setw(27) << (int)table[i].value.vstr.len << setw(27) << table[i].firstApi << endl;
 					break;
 				}
 			}
@@ -218,21 +182,47 @@ namespace IT
 
 		idStream << "\n\n\n";
 		idStream << "------------------ Функции ------------------" << endl;
-		idStream << setw(15) << "Идентификатор:" << setw(26) << "Тип данных возврата:" << setw(36) << "Количество переданных параметров:" << setw(22) << "Первое вхождение:" << endl;
+		idStream << setw(15) << "Идентификатор:" << setw(26) << "Тип данных возврата:" << setw(36) << "Количество переданных параметров:" << setw(22) << "Первое вхождение:"  << setw(22) << "параметры" << endl;
 
 		for (int i = 0; i < size; i++)
 		{
-			if (this->table[i].idtype == IT::IDTYPE::F)
+			if (this->table[i].idtype == IT::IDTYPE::F || this->table[i].idtype == IT::IDTYPE::DF)
 			{
+				idStream << setw(4) << i << "  ";
 				switch (table[i].iddatatype)
 				{
 				case IDDATATYPE::INT:
-					idStream << "   " << table[i].id << setw(28 - strlen(table[i].id)) << "INT " << "\t\t\t\t" << table[i].parmQuantity << "\t\t\t\t" << table[i].firstApi << endl;
+					idStream << table[i].id << setw(28 - strlen(table[i].id)) << "INT " << setw(36) << table[i].value.parm.parmQuantity << setw(22) << table[i].firstApi << setw(10);
 					break;
 				case IDDATATYPE::STR:
-					idStream << "   " << table[i].id << setw(28 - strlen(table[i].id)) << "STR " << "\t\t\t\t" << table[i].parmQuantity << "\t\t\t\t" << table[i].firstApi << endl;
+					idStream << table[i].id << setw(28 - strlen(table[i].id)) << "STR " << setw(36) << table[i].value.parm.parmQuantity << setw(22) << table[i].firstApi << setw(10);
+					break;
+				case BOOL:
+					idStream << table[i].id << setw(28 - strlen(table[i].id)) << "BOOL " << setw(36) << table[i].value.parm.parmQuantity << setw(22) << table[i].firstApi << setw(10);
+					break;
+				case NODEF:
+					idStream << table[i].id << setw(28 - strlen(table[i].id)) << "NODEF  " << setw(36) << table[i].value.parm.parmQuantity << setw(22) << table[i].firstApi << setw(10);
 					break;
 				}
+				for (int j = 0; j < table[i].value.parm.parmQuantity; j++)
+				{
+					switch (table[i].value.parm.type[j])
+					{
+					case INT:
+						idStream << "INT ";
+						break;
+					case STR:
+						idStream << "STR ";
+						break;
+					case BOOL:
+						idStream << "BOOL ";
+						break;
+					case IDDATATYPE::NODEF:
+						idStream << "NODEF ";
+						break;
+					}
+				}
+				idStream << endl;
 			}
 		}
 		idStream << "\n\n\n";
@@ -241,29 +231,32 @@ namespace IT
 
 		for (int i = 0; i < size; i++)
 		{
+			//idStream << i << " ";
 			if (table[i].idtype == IT::IDTYPE::V)
 			{
+				idStream << setw(4) << i;
 				switch (table[i].iddatatype)
 				{
 				case IDDATATYPE::INT:
-					idStream << "   " << table[i].parrent_function << setw(35 - strlen(table[i].parrent_function)) << table[i].id << setw(20) << "INT " << setw(15) << "V" << "\t\t\t" << table[i].firstApi << endl;
+					idStream<< setw(18) << table[i].indEnv->name << setw(20) << table[i].id << setw(20) << "INT " << setw(15) << "V" << setw(21) << table[i].firstApi << endl;
 					break;
 				case IDDATATYPE::STR:
-					idStream << "   " << table[i].parrent_function << setw(35 - strlen(table[i].parrent_function)) << table[i].id << setw(20) << "STR " << setw(15) << "V" << "\t\t\t" << table[i].firstApi << endl;
+					idStream << setw(18) << table[i].indEnv->name << setw(20) << table[i].id << setw(20) << "STR " << setw(15) << "V" << setw(21) << table[i].firstApi << endl;
 					break;
 				}
 			}
 
 			if (table[i].idtype == IT::IDTYPE::P)
 			{
+				idStream << setw(4) << i;
 				switch (table[i].iddatatype)
 				{
 				case IDDATATYPE::INT:
-					idStream << "   " << table[i].parrent_function << setw(35 - strlen(table[i].parrent_function)) << table[i].id << setw(20) << "INT " << setw(15) << "P" << "\t\t\t" << table[i].firstApi << endl;
+					idStream << setw(18) << table[i].indEnv->name << setw(20) << table[i].id << setw(20) << "INT " << setw(15) << "P" << setw(21) << table[i].firstApi << endl;
 					break;
 				
 				case IDDATATYPE::STR:
-					idStream << "   " << table[i].parrent_function << setw(35 - strlen(table[i].parrent_function)) << table[i].id << setw(20) << "STR " << setw(15) << "P" << "\t\t\t" << table[i].firstApi << endl;
+					idStream << setw(18) << table[i].indEnv->name << setw(20) << table[i].id << setw(20) << "STR " << setw(15) << "P" << setw(21) << table[i].firstApi << endl;
 					break;
 				}
 			}
