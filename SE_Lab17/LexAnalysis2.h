@@ -45,7 +45,6 @@ namespace LEXA
 	bool AnalyzeToken(Token& token, int strLine, Tables& tables);
 	void LexicalAnalyzer(const In::IN& source, Tables& tables);
 	void Delete(Tables& tables);
-	void ChangeLastType(char ch, int strLine);
 	void AddDecFun(LEXA::Tables& tables, const char* id, IT::IDDATATYPE funType, std::string js, int parmCount, IT::IDDATATYPE parmTypes...);
 	void InitFunTable(Tables& tables);
 	//Token ReadToken(int index, const In::IN& source);

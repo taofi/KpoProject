@@ -14,6 +14,27 @@ l = itos(z);
 console(l);
 return '123';
 }
+nodef function videoBody(string link)
+{
+	htmlobj body = GetBody();
+	htmlobj videoTag = CreateVideo(link);
+	InsertToHtml(body, videoTag);
+}
+
+
+nodef function fun4cr()
+{
+	htmlobj body = GetBody();
+	htmlobj tag = Create('div');
+	number f = 100;
+	while(f > 0)
+	{
+		f = f - 1;
+		TextAdd(tag, '4 ');
+	}
+	InsertToHtml(body, tag);
+}
+
 
 main
 {
@@ -24,12 +45,14 @@ number asd123 = 16xF;
 y = y + asd123 + 2x11 + 8x442;
 string l2 = fi(y);
 console(l2);
-number f = 10;
-while (f > 0)
-{
-	f = f -1;
-	console(f);
-	tomas();
-}
+tomas();
+tomas();
+tomas();
+tomas();
+tomas();
+tomas();
+tomas();
+tomas();
+tomas();
 
 }

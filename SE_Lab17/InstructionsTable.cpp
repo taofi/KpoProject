@@ -2,11 +2,11 @@
 #include <iostream>
 #include "Error.h"
 #include "InstructionsTable.h"
-#define ALPHABETSIZE 91
+#define ALPHABETSIZE 94
 #define ALPHABETNOTATIONSIZE 37
 #define ALPHOBETIDSIZE 63
 
-char alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_=+:;<>,./?\\{}[]\n";
+char alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*\\()- _=+:;<>,./'?\\{}[]\n";
 char alphabetid[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 char alphabetNotation[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 FST::NODE* nodeid;
@@ -160,9 +160,12 @@ namespace INSTTB
 		table.Add(new Entry('t', "string\0", WORD));
 		table.Add(new Entry('t', "number\0", WORD));
 		table.Add(new Entry('t', "htmlobj\0", WORD));
+		table.Add(new Entry('t', "nodef\0", WORD));
 		table.Add(new Entry('t', "bool\0", WORD));
 		table.Add(new Entry('r', "return\0", WORD));
 		table.Add(new Entry('w', "while\0", WORD));
+		table.Add(new Entry('j', "if\0", WORD));
+		table.Add(new Entry('e', "else\0", WORD));
 		table.Add(new Entry('m', "main\0", IND));
 		table.Add(new Entry('{', "{\0", SPR));
 		table.Add(new Entry('}', "}\0", SPR));
@@ -177,7 +180,7 @@ namespace INSTTB
 		table.Add(new Entry('v', "<\0", OPR));
 		table.Add(new Entry('v', ">\0", OPR));
 		table.Add(new Entry('=', "=\0", OPR));
-
+		table.Add(new Entry('=', "!=\0", OPR));
 		
 	}
 	

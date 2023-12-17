@@ -5,6 +5,9 @@
 #include "LexAnalysis2.h"
 #include "Error.h"
 
+
+IT::IDDATATYPE LastVarType;
+
 int NotationToDec(char* s)
 {
 	char notationstr[3];
@@ -42,11 +45,25 @@ char* intToString(int number) {
 	charArray[numDigits] = '\0';
 	return charArray;
 }
-
+void ChangeLastType(char* ch, int strLine)
+{
+	if (strcmp(ch, "number") == 0)
+		LastVarType = IT::INT;
+	else if (strcmp(ch, "string") == 0)
+		LastVarType = IT::STR;
+	else if (strcmp(ch, "bool") == 0)
+		LastVarType = IT::BOOL;
+	else if (strcmp(ch, "htmlobj") == 0)
+		LastVarType = IT::HTMLOBJ;
+	else if (strcmp(ch, "nodef") == 0)
+		LastVarType = IT::NODEF;
+	else
+		throw ERROR_THROW_IN(95, strLine, -1);
+}
 namespace LEXA
 {
 	In::IN inTable;
-	IT::IDDATATYPE LastVarType;
+
 
 	Token::Token(char* word, INSTTB::WORDTYPE type)
 	{
@@ -88,8 +105,27 @@ namespace LEXA
 		AddDecFun(tables, "concat", IT::STR, "function pow2ii(str1, str2)\n{\nreturn str1 + str2;\n}\n", 2, IT::STR, IT::STR);
 		AddDecFun(tables, "itos", IT::STR, "function itos1i(number)\n{\nreturn ('' + number);\n}\n", 1, IT::INT);
 		AddDecFun(tables, "strsize", IT::INT, "function strsize1s(str)\n{\nreturn str.length;\n}\n", 1, IT::STR);
+		AddDecFun(tables, "CreateVideo", IT::HTMLOBJ, "function CreateVideo1s(link) {\n"
+													"    var iframe = document.createElement(\"iframe\");\n"
+													"    iframe.width = \"560\";\n"
+													"    iframe.height = \"315\";\n"
+													"    iframe.src = link;\n"
+													"    iframe.title = \"YouTube video player\";\n"
+													"    iframe.frameBorder = \"0\";\n"
+													"    iframe.allow = \"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\";\n"
+													"    iframe.allowFullscreen = true;\n"
+													"    return iframe;\n"
+													"}", 1, IT::STR);
+		//AddDecFun(tables, "video", IT::NODEF, "function video1s(link)\n{\ndocument.body.innerHTML += `<iframe width=\"560\" height=\"315\" src=${link} title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>`;\n}\n", 1, IT::STR);
 		AddDecFun(tables, "tomas", IT::NODEF, "function tomas0()\n{\ndocument.body.innerHTML += '<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/X-ANZ8ba8jU?autoplay=1&loop=1\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>';\n}\n", 0, IT::NODEF);
-
+		AddDecFun(tables, "GetHtmlById", IT::HTMLOBJ, "function GetHtmlById1s(tag)\n{\nreturn document.getElementById(tag);\n}\n", 1, IT::STR);
+		AddDecFun(tables, "GetBody", IT::HTMLOBJ, "function GetBody0()\n{\nreturn document.body;\n}\n", 0, IT::NODEF);
+		AddDecFun(tables, "Create", IT::HTMLOBJ, "function Create1s(tag)\n{\nreturn document.createElement(tag);\n}\n", 1, IT::STR);
+		AddDecFun(tables, "InsertToHtml", IT::NODEF, "function InsertToHtml2hh(parent, child)\n{\nparent.appendChild(child);\n}\n", 2, IT::HTMLOBJ, IT::HTMLOBJ);
+		AddDecFun(tables, "TextSet", IT::NODEF, "function TextSet2hs(tag, text)\n{\ntag.innerHTML = text;\n}\n", 2, IT::HTMLOBJ, IT::STR);
+		AddDecFun(tables, "TextAdd", IT::NODEF, "function TextAdd2hs(tag, text)\n{\ntag.innerHTML += text;\n}\n", 2, IT::HTMLOBJ, IT::STR);
+		AddDecFun(tables, "SetCSS", IT::NODEF, "function SetCSS2hs(tag, css)\n{\ntag.style.cssText = css;\n}\n", 2, IT::HTMLOBJ, IT::STR);
+		AddDecFun(tables, "AddCSS", IT::NODEF, "function AddCSS2hs(tag, css)\n{\ntag.style.cssText += css;\n}\n", 2, IT::HTMLOBJ, IT::STR);
 	}
 	int lexemaPosition = 0;
 	void LexicalAnalyzer(const In::IN& source, Tables& tables)
@@ -123,7 +159,13 @@ namespace LEXA
 				while (source.text[i] != '\'')
 				{
 					if (token.size >= TI_STR_MAXSIZE)
-						throw ERROR_THROW_IN(91, lexemaLine, lexemaPosition); // строковый литерал слишком длинный
+						throw ERROR_THROW_IN(91, lexemaLine, lexemaPosition);
+					if (source.text[i] == '\\' && source.text[i + 1] == '\'')
+					{
+						token.word[token.size++] = source.text[i++];
+						if (token.size >= TI_STR_MAXSIZE)
+							throw ERROR_THROW_IN(91, lexemaLine, lexemaPosition);
+					}
 					token.word[token.size++] = source.text[i++];
 				}
 
@@ -186,7 +228,7 @@ namespace LEXA
 		{
 			tables.LexTable.Add(LT::Entry(fstg.lex, strLine, LT_TI_NULLXDX));
 			if (fstg.lex == 't')
-				ChangeLastType(fstg.analizStr[0], strLine);
+				ChangeLastType(fstg.analizStr, strLine);
 			return true;
 		}
 		INDAnalyz(fstg, strLine, tables);
@@ -244,7 +286,10 @@ namespace LEXA
 			throw ERROR_THROW_IN(97, strLine, -1);
 		if (tables.LexTable.table[tables.LexTable.size - 1].lexema == LEX_FUNCTION || fstg.lex == 'm') //первое объ€вление функции
 		{
-			tables.idTable.Add(IT::Entry(fstg.analizStr, LastVarType, IT::F, tables.LexTable.size, strLine));
+			if(fstg.lex == 'm')
+				tables.idTable.Add(IT::Entry(fstg.analizStr, IT::NODEF, IT::F, tables.LexTable.size, strLine));
+			else
+				tables.idTable.Add(IT::Entry(fstg.analizStr, LastVarType, IT::F, tables.LexTable.size, strLine));
 			tables.LexTable.Add(LT::Entry(fstg.lex, strLine, tables.idTable.size - 1));
 			tables.idTable.funCount++;
 			//envStack.push(EnvironmentToken(fstg.analizStr, FUN, tables.LexTable.size - 1, tables.idTable.size - 1));
@@ -279,27 +324,7 @@ namespace LEXA
 		return FSTExecute(fstg);
 	}
 
-	void ChangeLastType(char ch, int strLine)
-	{
-		switch (ch)
-		{
-		case 'n':
-			LastVarType = IT::INT;
-			break;
-		case 's':
-			LastVarType = IT::STR;
-			break;
-		case 'b':
-			LastVarType = IT::BOOL;
-			break;
-		case 'h':
-			LastVarType = IT::HTMLOBJ;
-			break;
-		default:
-			ERROR_THROW_IN(95, strLine, -1);
-			break;
-		}
-	}
+	
 
 	char* intToChar(int num) {
 		int length = static_cast<int>(log10(num)) + 1;

@@ -61,10 +61,10 @@ namespace LT
 
 		if (!lexStream.is_open())
 			throw ERROR_THROW(63);
-
+		lexStream << setw(3) << "i" << "|" << setw(3) << "lex" << " | " << setw(2) << "TI" << " | " << " sn" << "\n";
 		for (int i = 0; i < size; i++)
 		{
-			lexStream << table[i].lexema;
+			lexStream << setw(3) << i << "|" << setw(4) << table[i].lexema << "|" << setw(4)<< table[i].idxTI << "|" << setw(3) << table[i].sn <<"\n";
 		}
 		lexStream.close();
 	}

@@ -18,6 +18,55 @@ namespace SA
 		this->token = token;
 	}
 
+	bool FunRetAnlz(LEXA::Tables& tables)
+	{
+		stack<EnvironmentToken> rstack;
+		stack<EnvironmentToken> astack;
+		int blockCount = 0;
+		IT::IDDATATYPE ftype;
+		for (int i = 0; i < tables.LexTable.size; i++)
+		{
+			if (tables.LexTable.table[i].lexema == '{' || tables.LexTable.table[i].lexema == '}')
+				rstack.push(EnvironmentToken(tables.LexTable.table[i].lexema, SPR, i, tables.LexTable.table[i].idxTI));
+			else if (tables.LexTable.table[i - 1].lexema == 'f' && tables.LexTable.table[i].lexema == 'i' || tables.LexTable.table[i].lexema == 'm')
+				rstack.push(EnvironmentToken(tables.LexTable.table[i].lexema, FUN, i, tables.LexTable.table[i].idxTI));
+			else if (tables.LexTable.table[i].lexema == 'r')
+				rstack.push(EnvironmentToken(tables.LexTable.table[i].lexema, RET, i, tables.LexTable.table[i].idxTI));
+		}
+		while (!rstack.empty())
+		{
+			if (rstack.top().type == FUN)
+			{
+				ftype = tables.idTable.table[rstack.top().inIdTable].iddatatype;
+				do
+				{
+					if (astack.top().lex == '{')
+						blockCount++;
+					else if (astack.top().lex == '}')
+						blockCount--;
+					else if (astack.top().type == RET)
+					{
+						for (int i = astack.top().inLexTable + 1; tables.LexTable.table[i].lexema != ';'; i++)
+						{
+							if ((tables.LexTable.table[i].lexema == '('))
+							{
+								while (tables.LexTable.table[i].lexema != ')')
+									i++;
+							}
+							if ((tables.LexTable.table[i].lexema == LEX_ID || tables.LexTable.table[i].lexema == LEX_LITERAL) && tables.idTable.table[tables.LexTable.table[i].idxTI].iddatatype != ftype)
+								throw ERROR_THROW_IN(125, tables.LexTable.table[i].sn, -1);
+						}
+					}
+					astack.pop();
+				} while (blockCount != 0);
+			}
+			if (rstack.top().type == SPR || rstack.top().type == RET)
+				astack.push(rstack.top());
+			rstack.pop();
+		}
+		return true;
+	}
+
 	bool Semantic(LEXA::Tables& tables)
 	{
 		//std::stack<FunToken> funIdInLex;
@@ -29,7 +78,7 @@ namespace SA
 				envStack.push(EnvironmentToken(tables.LexTable.table[i].lexema, FUN, i, tables.LexTable.table[i].idxTI));
 			else if (tables.LexTable.table[i].lexema == 'i' && tables.LexTable.table[i - 1].lexema == 't')
 				envStack.push(EnvironmentToken(tables.LexTable.table[i].lexema, FIND, i, tables.LexTable.table[i].idxTI));
-	/*		else if ((tables.LexTable.table[i].lexema == 'i' || tables.LexTable.table[i].lexema == 'l') && tables.LexTable.table[i - 1].lexema == 'r' )
+			/*else if (tables.LexTable.table[i].lexema == 'r' )
 				envStack.push(EnvironmentToken(tables.LexTable.table[i].lexema, RET, i, tables.LexTable.table[i].idxTI));*/
 			else if (tables.LexTable.table[i].lexema == 'i' && tables.LexTable.table[i + 1].lexema == '(')
 			{
@@ -63,6 +112,8 @@ namespace SA
 
 		for (int i = 0; i < tables.idTable.size; i++)
 		{
+			if(tables.idTable.table[i].idtype == IT::V && tables.idTable.table[i].iddatatype == IT::NODEF)
+				throw ERROR_THROW_IN(128, tables.idTable.table[i].str_number, -1);
 			if (tables.idTable.table[i].idtype == IT::L)
 				continue;
 			if (CountIdInEnvironment(tables.idTable.table[i].id, tables.idTable.table[i].indEnv, tables) > 1)
@@ -83,7 +134,7 @@ namespace SA
 				i += ExpressionCheck(i, tables);
 			}
 		}
-		
+		FunRetAnlz(tables);
 		return false;
 	}
 

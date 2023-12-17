@@ -1,18 +1,20 @@
 ------------------ Литералы ------------------
  Идентификатор:      Тип данных:      Значение:              Длина строки:          Первое вхождение:
-  10  l_0             INT               0                          -                         15
-  13  l_1             INT             564                          -                         29
-  14  l_2             INT              10                          -                         31
-  16  l_3             INT             123                          -                         44
-  18  l_4             STR           '123'                          5                         65
-  21  l_5             INT               2                          -                         77
-  22  l_6             INT               3                          -                         79
-  25  l_7             INT              15                          -                         88
-  26  l_8             INT               3                          -                         96
-  27  l_9             INT             290                          -                         98
-  30  l_10             INT              10                          -                        116
-  31  l_11             INT               0                          -                        122
-  32  l_12             INT               1                          -                        129
+  17  l_0             INT               0                          -                         15
+  20  l_1             INT             564                          -                         29
+  21  l_2             INT              10                          -                         31
+  23  l_3             INT             123                          -                         44
+  25  l_4             STR           '123'                          5                         65
+  33  l_5             STR           'div'                          5                        117
+  35  l_6             INT             100                          -                        123
+  36  l_7             INT               0                          -                        129
+  37  l_8             INT               1                          -                        136
+  38  l_9             STR            '4 '                          4                        142
+  41  l_10             INT               2                          -                        163
+  42  l_11             INT               3                          -                        165
+  45  l_12             INT              15                          -                        174
+  46  l_13             INT               3                          -                        182
+  47  l_14             INT             290                          -                        184
 
 
 
@@ -24,25 +26,39 @@
    3  concat2ss               STR                                    2                    -1      STR STR 
    4  itos1i                  STR                                    1                    -1      INT 
    5  strsize1s               INT                                    1                    -1      STR 
-   6  tomas0               NODEF                                     0                    -1
-   7  fi1i                    STR                                    1                     2      INT 
-  11  intLv21i                INT                                    1                    19      INT 
-  19  main0                   STR                                    0                    68
+   6  CreateVideo1s      HTMLOBJ                                     1                    -1      STR 
+   7  tomas0               NODEF                                     0                    -1
+   8  GetHtmlById1s      HTMLOBJ                                     1                    -1      STR 
+   9  GetBody0           HTMLOBJ                                     0                    -1
+  10  Create1s           HTMLOBJ                                     1                    -1      STR 
+  11  InsertToHtml2hh      NODEF                                     2                    -1  HTMLOBJ HTMLOBJ 
+  12  TextSet2hs           NODEF                                     2                    -1  HTMLOBJ STR 
+  13  TextAdd2hs           NODEF                                     2                    -1  HTMLOBJ STR 
+  14  fi1i                    STR                                    1                     2      INT 
+  18  intLv21i                INT                                    1                    19      INT 
+  26  videoBody1s          NODEF                                     1                    70      STR 
+  30  fun4cr0              NODEF                                     0                   101
+  39  main0                NODEF                                     0                   154
        
 
 
 ------------------ Переменные ------------------
- Имя родительского блока:      Идентификатор:     Тип данных:     Тип идентификатора:    Первое вхождение:
-   8                fi                   y                INT               P                    5
-   9                fi                   x                INT               V                    9
-  12            intLv2                 asd                INT               P                   22
-  15                fi                   z                INT               V                   38
-  17                fi                   l                STR               V                   50
-  20              main                   y                INT               V                   71
-  23              main                   z                STR               V                   83
-  24              main              asd123                INT               V                   86
-  28              main                  l2                STR               V                  101
-  29              main                   f                INT               V                  114
+           Имя окружения:      Идентификатор:     Тип данных:     Тип идентификатора:    Первое вхождение:
+  15                fi                   y                INT               P                    5
+  16                fi                   x                INT               V                    9
+  19            intLv2                 asd                INT               P                   22
+  22                fi                   z                INT               V                   38
+  24                fi                   l                STR               V                   50
+  27         videoBody                link                STR               P                   73
+  28         videoBody                body            HTMLOBJ               V                   77
+  29         videoBody            videoTag            HTMLOBJ               V                   84
+  31            fun4cr                body            HTMLOBJ               V                  106
+  32            fun4cr                 tag            HTMLOBJ               V                  113
+  34            fun4cr                   f                INT               V                  121
+  40              main                   y                INT               V                  157
+  43              main                   z                STR               V                  169
+  44              main              asd123                INT               V                  172
+  48              main                  l2                STR               V                  187
 
 
 

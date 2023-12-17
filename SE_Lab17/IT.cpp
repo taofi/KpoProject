@@ -188,22 +188,26 @@ namespace IT
 		{
 			if (this->table[i].idtype == IT::IDTYPE::F || this->table[i].idtype == IT::IDTYPE::DF)
 			{
-				idStream << setw(4) << i << "  ";
+				idStream << setw(4) << i << "  " << table[i].id << setw(28 - strlen(table[i].id));
 				switch (table[i].iddatatype)
 				{
 				case IDDATATYPE::INT:
-					idStream << table[i].id << setw(28 - strlen(table[i].id)) << "INT " << setw(36) << table[i].value.parm.parmQuantity << setw(22) << table[i].firstApi << setw(10);
+					idStream  << "INT " << setw(36);
 					break;
 				case IDDATATYPE::STR:
-					idStream << table[i].id << setw(28 - strlen(table[i].id)) << "STR " << setw(36) << table[i].value.parm.parmQuantity << setw(22) << table[i].firstApi << setw(10);
+					idStream << "STR " << setw(36) ;
 					break;
 				case BOOL:
-					idStream << table[i].id << setw(28 - strlen(table[i].id)) << "BOOL " << setw(36) << table[i].value.parm.parmQuantity << setw(22) << table[i].firstApi << setw(10);
+					idStream  << "BOOL " << setw(36);
 					break;
 				case NODEF:
-					idStream << table[i].id << setw(28 - strlen(table[i].id)) << "NODEF  " << setw(36) << table[i].value.parm.parmQuantity << setw(22) << table[i].firstApi << setw(10);
+					idStream  << "NODEF  " << setw(36);
+					break;
+				case HTMLOBJ:
+					idStream << "HTMLOBJ  " << setw(36);
 					break;
 				}
+				idStream << table[i].value.parm.parmQuantity << setw(22) << table[i].firstApi << setw(10);
 				for (int j = 0; j < table[i].value.parm.parmQuantity; j++)
 				{
 					switch (table[i].value.parm.type[j])
@@ -217,6 +221,9 @@ namespace IT
 					case BOOL:
 						idStream << "BOOL ";
 						break;
+					case HTMLOBJ:
+						idStream << "HTMLOBJ ";
+						break;
 					case IDDATATYPE::NODEF:
 						idStream << "NODEF ";
 						break;
@@ -227,38 +234,35 @@ namespace IT
 		}
 		idStream << "\n\n\n";
 		idStream << "------------------ Переменные ------------------" << endl;
-		idStream << setw(25) << "Имя родительского блока:" << setw(20) << "Идентификатор:" << setw(16) << "Тип данных:" << setw(24) << "Тип идентификатора:" << setw(21) << "Первое вхождение:" << endl;
+		idStream << setw(25) << "Имя окружения:" << setw(20) << "Идентификатор:" << setw(16) << "Тип данных:" << setw(24) << "Тип идентификатора:" << setw(21) << "Первое вхождение:" << endl;
 
 		for (int i = 0; i < size; i++)
 		{
 			//idStream << i << " ";
-			if (table[i].idtype == IT::IDTYPE::V)
+			if (table[i].idtype == IT::IDTYPE::V || table[i].idtype == IT::IDTYPE::P)
 			{
 				idStream << setw(4) << i;
+				idStream << setw(18) << table[i].indEnv->name << setw(20) << table[i].id << setw(20);
 				switch (table[i].iddatatype)
 				{
 				case IDDATATYPE::INT:
-					idStream<< setw(18) << table[i].indEnv->name << setw(20) << table[i].id << setw(20) << "INT " << setw(15) << "V" << setw(21) << table[i].firstApi << endl;
+					idStream << "INT " << setw(15);
 					break;
 				case IDDATATYPE::STR:
-					idStream << setw(18) << table[i].indEnv->name << setw(20) << table[i].id << setw(20) << "STR " << setw(15) << "V" << setw(21) << table[i].firstApi << endl;
+					idStream << "STR " << setw(15);
+					break;
+				case IDDATATYPE::BOOL:
+					idStream << "BOOL " << setw(15);
+					break;
+				case IDDATATYPE::HTMLOBJ:
+					idStream << "HTMLOBJ " << setw(15);
 					break;
 				}
-			}
-
-			if (table[i].idtype == IT::IDTYPE::P)
-			{
-				idStream << setw(4) << i;
-				switch (table[i].iddatatype)
-				{
-				case IDDATATYPE::INT:
-					idStream << setw(18) << table[i].indEnv->name << setw(20) << table[i].id << setw(20) << "INT " << setw(15) << "P" << setw(21) << table[i].firstApi << endl;
-					break;
-				
-				case IDDATATYPE::STR:
-					idStream << setw(18) << table[i].indEnv->name << setw(20) << table[i].id << setw(20) << "STR " << setw(15) << "P" << setw(21) << table[i].firstApi << endl;
-					break;
-				}
+				if(table[i].idtype == IT::V)
+					idStream << "V" ;
+				else
+					idStream << "P";
+				idStream << setw(21) << table[i].firstApi << endl;
 			}
 		}
 

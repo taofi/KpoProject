@@ -50,6 +50,8 @@ namespace OT
 		table.Add(">", OEntry(">", 1));
 		table.Add("<=", OEntry("<=", 1));
 		table.Add("=>", OEntry("=>", 1));
+		table.Add("==", OEntry("==", 1));
+		table.Add("!=", OEntry("!=", 1));
 		table.Add("=", OEntry("=", 0));
 	}
 }

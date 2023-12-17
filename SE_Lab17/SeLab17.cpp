@@ -67,7 +67,7 @@ int _tmain(int argc, _TCHAR* argv[])
     catch (Error::ERROR e)
     {
         Log::WriteError(log, e);
-        cout << e.id << " " << e.message << endl;
+        cout << e.id << " " << e.message << " в строке " << e.inext.line << endl;
         //Out::WriteError(out, e);
     }
 
