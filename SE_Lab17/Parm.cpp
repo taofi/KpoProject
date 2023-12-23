@@ -43,9 +43,6 @@ namespace Parm
 
 				if (wcsstr(argv[i], PARM_LOG))
 					wcscpy_s(parm.log, wcsstr(argv[i], L":") + 1);
-
-				if (wcsstr(argv[i], PARM_GEN))
-					wcscpy_s(parm.gen, wcsstr(argv[i], L":") + 1);
 			}
 
 		if (!hasOut)
@@ -58,12 +55,6 @@ namespace Parm
 		{
 			wcscpy_s(parm.log, parm.in);
 			wcscat_s(parm.log, PARM_LOG_DEFAULT_EXT);
-		}
-
-		if (!hasGen)
-		{
-			wcscpy_s(parm.gen, parm.in);
-			wcscat_s(parm.gen, PARM_GEN_DEFAULT_EXT);
 		}
 
 		return parm;

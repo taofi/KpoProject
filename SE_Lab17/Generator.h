@@ -7,7 +7,7 @@
 
 namespace GEN 
 {
-	enum LEXTYPE { NODEF = -1, IGNR = 0, DIRCT = 1, INDF = 2, OPRT = 3, SEMICLN = 4, RIGHTBR = 5}; //тип литтерала в таблице генератора
+	enum LEXTYPE { NODEF = -1, IGNR = 0, DIRCT = 1, INDF = 2, OPRT, SEMICLN, RIGHTBR, EVENT}; //тип литтерала в таблице генератора
 
 	struct Entry
 	{

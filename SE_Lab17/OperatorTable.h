@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <string>
+#include "IT.h"
 #define MAXOPRSIZE 20
 
 namespace OT
@@ -9,7 +10,8 @@ namespace OT
 	{
 		char opr[MAXOPRSIZE];
 		int oPriority;
-		OEntry(const char* opr, int oPriority);
+		IT::IDDATATYPE type;
+		OEntry(const char* opr, int oPriority, IT::IDDATATYPE type);
 		OEntry();
 	};
 	struct Table

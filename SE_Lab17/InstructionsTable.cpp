@@ -6,7 +6,7 @@
 #define ALPHABETNOTATIONSIZE 37
 #define ALPHOBETIDSIZE 63
 
-char alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*\\()- _=+:;<>,./'?\\{}[]\n";
+char alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*\\()- _=+:;<>%,./'?\\{}[]\n";
 char alphabetid[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 char alphabetNotation[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 FST::NODE* nodeid;
@@ -157,9 +157,10 @@ namespace INSTTB
 		table.Add(new Entry('l', "true\0", LEX));
 		table.Add(new Entry('l', "false\0", LEX));
 		table.Add(new Entry('f', "function\0", WORD));
-		table.Add(new Entry('t', "string\0", WORD));
+		table.Add(new Entry('t', "str\0", WORD));
 		table.Add(new Entry('t', "number\0", WORD));
 		table.Add(new Entry('t', "htmlobj\0", WORD));
+		table.Add(new Entry('t', "byte\0", WORD));
 		table.Add(new Entry('t', "nodef\0", WORD));
 		table.Add(new Entry('t', "bool\0", WORD));
 		table.Add(new Entry('r', "return\0", WORD));
@@ -176,12 +177,14 @@ namespace INSTTB
 		table.Add(new Entry('v', "+\0", OPR));
 		table.Add(new Entry('v', "-\0", OPR));
 		table.Add(new Entry('v', "*\0", OPR));
-		table.Add(new Entry('v', "/\0", OPR));
 		table.Add(new Entry('v', "<\0", OPR));
 		table.Add(new Entry('v', ">\0", OPR));
+		table.Add(new Entry('v', "<=\0", OPR));
+		table.Add(new Entry('v', "=>\0", OPR));
 		table.Add(new Entry('=', "=\0", OPR));
-		table.Add(new Entry('=', "!=\0", OPR));
-		
+		table.Add(new Entry('v', "!=\0", OPR));
+		table.Add(new Entry('v', "==\0", OPR));
+		table.Add(new Entry('p', "event\0", WORD));
 	}
 	
 	void Table::DeleteTable()

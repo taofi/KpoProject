@@ -5,8 +5,9 @@ namespace OT
 {
 	
 
-	OEntry::OEntry(const char* opr, int oPriority)
+	OEntry::OEntry(const char* opr, int oPriority, IT::IDDATATYPE type)
 	{
+		this->type = type;
 		this->oPriority = oPriority;
 		int i = 0;
 		while (opr[i] != '\0')
@@ -42,16 +43,15 @@ namespace OT
 
 	void InitOprTable(Table& table)
 	{
-		table.Add("+", OEntry("+", 2));
-		table.Add("-", OEntry("-", 2));
-		table.Add("*", OEntry("*", 3));
-		table.Add("/", OEntry("/", 3));
-		table.Add("<", OEntry("<", 1));
-		table.Add(">", OEntry(">", 1));
-		table.Add("<=", OEntry("<=", 1));
-		table.Add("=>", OEntry("=>", 1));
-		table.Add("==", OEntry("==", 1));
-		table.Add("!=", OEntry("!=", 1));
-		table.Add("=", OEntry("=", 0));
+		table.Add("+", OEntry("+", 2, IT::INT));
+		table.Add("-", OEntry("-", 2, IT::INT));
+		table.Add("*", OEntry("*", 3, IT::INT));
+		table.Add("<", OEntry("<", 1, IT::BOOL));
+		table.Add(">", OEntry(">", 1, IT::BOOL));
+		table.Add("<=", OEntry("<=", 1, IT::BOOL));
+		table.Add("=>", OEntry(">=", 1, IT::BOOL));
+		table.Add("==", OEntry("==", 1, IT::BOOL));
+		table.Add("!=", OEntry("!=", 1, IT::BOOL));
+		table.Add("=", OEntry("=", 0, IT::NODEF));
 	}
 }

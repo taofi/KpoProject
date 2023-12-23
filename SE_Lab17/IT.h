@@ -1,6 +1,7 @@
 #pragma once
 #include "Environment.h"	
 #include <string>
+#include <fstream>
 #define TI_MAXSIZE		4096				// максимальное количество строк в таблице идентификаторов
 #define TI_INT_DEFAULT  0x00000000			// значение по умолчанию для типа integer
 #define TI_STR_DEFAULT  0x00				// значение по умолчанию для типа string
@@ -8,22 +9,22 @@
 #define TI_STR_MAXSIZE  255					// максимальная длина строки
 
 
-#define MAXSUFFIXSIZE 25
+#define MAXSUFFIXSIZE 20
 #define PARM_ID L".id.txt"
 
 
 namespace IT								// таблица идентификаторов 
 {
-	enum IDDATATYPE { NODEF = -1, DEF = 0, INT = 1, STR, BOOL, HTMLOBJ};				// типы данных
+	enum IDDATATYPE { NODEF = -1, DEF = 0, INT = 1, STR, BOOL, HTMLOBJ, BYTE};				// типы данных
 	enum IDTYPE { D, V, F, P, L, DF};			// типы идентификаторов: переменная, функция, параметр, литерал
 
 	struct Entry							// строка таблицы идентификаторов
 	{
 		int str_number; //номер строки
-		int indexPF;									//индекс родительской строки в IT table
 		ENV::Environment* indEnv;						//ссылка на окружения идентификатора
 		int firstApi;									// индекс первого вхождения в таблице лексем
-		char id[ID_MAXSIZE + MAXSUFFIXSIZE + 5];						// идентификатор (автоматически усекается до ID_MAXSIZE)
+		int firstInit;
+		char id[ID_MAXSIZE + MAXSUFFIXSIZE + 5];		// идентификатор (автоматически усекается до ID_MAXSIZE)
 		IDDATATYPE iddatatype;							// тип данных
 		IDTYPE idtype;									// тип идентификатора
 		union
@@ -71,7 +72,7 @@ namespace IT								// таблица идентификаторов
 		void Add(								// добавить строку в таблицу идентификаторов 
 			Entry entry								// строка таблицы идентификторов
 		);
-		void PrintIdTable(const wchar_t* in);	// вывод таблицы идентификаторов
+		void PrintIdTable(std::ofstream& idStream);	// вывод таблицы идентификаторов
 		IdTable();
 		char* GetLexemaName();
 	};

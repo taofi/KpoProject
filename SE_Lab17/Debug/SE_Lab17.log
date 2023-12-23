@@ -1,2 +1,23 @@
-﻿  InstructionsTable.cpp
-  SE_Lab17.vcxproj -> D:\projects\KpoProject\Debug\SE_Lab17.exe
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: промежуточный каталог (Debug\) содержит файлы, которые используются совместно с другим проектом (SE_Lab17.vcxproj).  Это может привести к ошибкам очистки и перестроения.
+  Environment.cpp
+  Error.cpp
+  Generator.cpp
+  IT.cpp
+D:\projects\KpoProject\SE_Lab17\IT.cpp(80,33): warning C4267: =: преобразование из "size_t" в "unsigned char"; возможна потеря данных
+  LT.cpp
+  LexAnalysis2.cpp
+D:\projects\KpoProject\SE_Lab17\LexAnalysis2.cpp(43,24): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+D:\projects\KpoProject\SE_Lab17\LexAnalysis2.cpp(45,29): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+  MFST.cpp
+D:\projects\KpoProject\SE_Lab17\MFST.cpp(265,66): warning C4267: =: преобразование из "size_t" в "short"; возможна потеря данных
+  OperatorTable.cpp
+  Parm.cpp
+  Semantic.cpp
+  VKS-2023.cpp
+D:\projects\KpoProject\SE_Lab17\VKS-2023.cpp(27,9): warning C4102: Log: неиспользованная метка
+  Создание кода...
+D:\projects\KpoProject\SE_Lab17\LexAnalysis2.cpp(374): warning C4172: возвращение адреса локальной или временной переменной : str
+D:\projects\KpoProject\SE_Lab17\LT.cpp(30): warning C4715: LT::LexTable::GetEntry: значение возвращается не при всех путях выполнения
+D:\projects\KpoProject\SE_Lab17\IT.cpp(111): warning C4715: IT::IdTable::GetEntry: значение возвращается не при всех путях выполнения
+D:\projects\KpoProject\SE_Lab17\IT.cpp(142): warning C4172: возвращение адреса локальной или временной переменной : buffer
+  SE_Lab17.vcxproj -> D:\projects\KpoProject\Debug\VKS-2023.exe

@@ -28,28 +28,7 @@ namespace Log
 		*log.stream << c;
 	}
 
-	//void WriteLine(LOG log, wchar_t* c, ...)
-	//{
-	//	wchar_t** pc = &c;
-	//	int len = 0;
-	//	while (*pc != L"\0")
-	//	{
-	//		len += wcslen(*pc);
-	//		pc++;
-	//	}
-	//	wchar_t* str = new wchar_t[len + 1];
-	//	char* strl = new char[len + 1];
-	//	str[0] = 0;
-	//	pc = &c;
-	//	while (*pc != L"")
-	//	{
-	//		wcscat(str, *pc);
-	//		pc++;
-	//	}
-	//	wcstombs(strl, str, len + 2);
-	//	log.stream->write(strl, len);
-	//	delete[] str;
-	//}
+	
 	void WriteLog(LOG log)
 
 	{
@@ -103,6 +82,17 @@ namespace Log
 		else
 			*log.stream << "Ошибка " << error.id << ": " << error.message << ", строка " << error.inext.line << ",позиция " << error.inext.col << std::endl;
 		
+	}
+
+	void WriteWarning(LOG log, Error::ERROR error)
+	{
+		if (error.inext.line == -1)
+			*log.stream << "Предупреждение " << error.id << ": " << error.message << std::endl;
+		else if (error.inext.col == -1)
+			*log.stream << "Предупреждение " << error.id << ": " << error.message << ", строка " << error.inext.line << std::endl;
+		else
+			*log.stream << "Предупреждение " << error.id << ": " << error.message << ", строка " << error.inext.line << ",позиция " << error.inext.col << std::endl;
+
 	}
 
 	void Close(LOG log)

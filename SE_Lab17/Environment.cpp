@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Environment.h"
 #include <iomanip>
+#include "Error.h"
 #include <cstring>
 #include <fstream>
 
@@ -30,10 +31,14 @@ namespace ENV
 	}
 	void Environment::AddInd(int index)
 	{
+		if (indcount >= MAXINDCOUNT)
+			throw ERROR_THROW(36);
 		indInIdTable[indcount++] = index;
 	}
 	void Environment::AddToLex(EnvironmentToken& index)
 	{
+		if (lexindcount >= MAXINDCOUNT*10)
+			throw ERROR_THROW(35);
 		indInLexTable[lexindcount++] = index;
 	}
 	void Environment::SetParent(Environment* Parent)

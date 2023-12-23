@@ -1,19 +1,23 @@
 ------------------ Литералы ------------------
  Идентификатор:      Тип данных:      Значение:              Длина строки:          Первое вхождение:
-  17  l_0             INT               0                          -                         15
-  20  l_1             INT             564                          -                         29
-  21  l_2             INT              10                          -                         31
-  23  l_3             INT             123                          -                         44
-  25  l_4             STR           '123'                          5                         65
-  32  l_5             INT               2                          -                        108
-  33  l_6             INT               3                          -                        110
-  36  l_7             INT              15                          -                        119
-  37  l_8             INT               3                          -                        127
-  38  l_9             INT             290                          -                        129
-  41  l_10             INT            1000                          -                        147
-  43  l_11             INT               0                          -                        160
-  44  l_12             INT               1                          -                        167
-  45  l_13             STR        'Хочу 4'                          8                        173
+  22  l_0            BYTE             -22                          -                         15
+  27  l_1             STR         'input'                          7                         48
+  28  l_2             STR 'width: 100px; height: 50px; margin: 4px; background-color: gray; border-radius: 10px; '                         88                         50
+  29  l_3             STR          'type'                          6                         57
+  30  l_4             STR        'button'                          8                         59
+  31  l_5             STR         'value'                          7                         66
+  35  l_6             STR           'div'                          5                         89
+  36  l_7             STR 'width: 560px; height: 315px; background-color: white; box-sizing: content-box; padding: 5px; border: solid 3px black;'                        119                         91
+  40  l_8             STR '?autoplay=1&loop=1'                         20                        116
+  42  l_9             STR 'window of number'                         18                        139
+  44  l_10            BYTE               9                          -                        145
+  45  l_11            BYTE               0                          -                        151
+  48  l_12            BYTE               4                          -                        181
+  49  l_13             STR         'click'                          7                        186
+  50  l_14             STR              ''                          2                        192
+  51  l_15             STR         'click'                          7                        198
+  52  l_16            BYTE               1                          -                        211
+  53  l_17             STR 'https://www.youtube.com/embed/X-ANZ8ba8jU'                         43                        216
 
 
 
@@ -32,30 +36,34 @@
   10  Create1s           HTMLOBJ                                     1                    -1      STR 
   11  InsertToHtml2hh      NODEF                                     2                    -1  HTMLOBJ HTMLOBJ 
   12  TextSet2hs           NODEF                                     2                    -1  HTMLOBJ STR 
-  13  TextAdd2hs           NODEF                                     2                    -1  HTMLOBJ STR 
-  14  fi1i                    STR                                    1                     2      INT 
-  18  intLv21i                INT                                    1                    19      INT 
-  26  videoBody1s          NODEF                                     1                    70      STR 
-  30  main0                NODEF                                     0                    99
-       
+  13  write2hs             NODEF                                     2                    -1  HTMLOBJ STR 
+  14  writeln2hs           NODEF                                     2                    -1  HTMLOBJ STR 
+  15  SetCSS2hs            NODEF                                     2                    -1  HTMLOBJ STR 
+  16  AddCSS2hs            NODEF                                     2                    -1  HTMLOBJ STR 
+  17  SetAttribute3hss     NODEF                                     3                    -1  HTMLOBJ STR STR 
+  18  Create2ss          HTMLOBJ                                     2                     2      STR STR 
+  24  CreateButton1s     HTMLOBJ                                     1                    37      STR 
+  32  main0                NODEF                                     0                    75
+  37  YoutubeVidoMaker1s   NODEF                                     1                   103      STR 
+
 
 
 ------------------ Переменные ------------------
            Имя окружения:      Идентификатор:     Тип данных:     Тип идентификатора:    Первое вхождение:
-  15                fi                   y                INT               P                    5
-  16                fi                   x                INT               V                    9
-  19            intLv2                 asd                INT               P                   22
-  22                fi                   z                INT               V                   38
-  24                fi                   l                STR               V                   50
-  27         videoBody                link                STR               P                   73
-  28         videoBody                body            HTMLOBJ               V                   77
-  29         videoBody            videoTag            HTMLOBJ               V                   84
-  31              main                   y                INT               V                  102
-  34              main                   z                STR               V                  114
-  35              main              asd123                INT               V                  117
-  39              main                  l2                STR               V                  132
-  40              main                   f                INT               V                  145
-  42              main                body            HTMLOBJ               V                  150
+  19            Create                name                STR               P                    5
+  20            Create                 css                STR               P                    8
+  21            Create                 usl               BYTE                                    V                   12
+  23            Create                 tag            HTMLOBJ               V                   17
+  25      CreateButton               value                STR               P                   40
+  26      CreateButton              button            HTMLOBJ               V                   44
+  33              main                body            HTMLOBJ               V                   78
+  34              main              window            HTMLOBJ               V                   85
+  38  YoutubeVidoMaker           shortLink                STR               P                  106
+  39  YoutubeVidoMaker                link                STR               V                  110
+  41  YoutubeVidoMaker            videoTag            HTMLOBJ               V                  120
+  43              main                   i               BYTE                                    V                  143
+  46                                     s                STR               V                  155
+  47                                button            HTMLOBJ               V                  163
 
 
 

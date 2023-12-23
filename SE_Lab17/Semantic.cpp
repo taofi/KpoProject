@@ -7,7 +7,7 @@
 #include <iostream>
 #include <cstring>
 
-
+stack<Error::ERROR>* warningQ;
 namespace SA
 {
 	
@@ -37,6 +37,7 @@ namespace SA
 		{
 			if (rstack.top().type == FUN)
 			{
+				bool retFound = false;
 				ftype = tables.idTable.table[rstack.top().inIdTable].iddatatype;
 				do
 				{
@@ -46,6 +47,7 @@ namespace SA
 						blockCount--;
 					else if (astack.top().type == RET)
 					{
+						retFound = true;
 						for (int i = astack.top().inLexTable + 1; tables.LexTable.table[i].lexema != ';'; i++)
 						{
 							if ((tables.LexTable.table[i].lexema == '('))
@@ -59,6 +61,8 @@ namespace SA
 					}
 					astack.pop();
 				} while (blockCount != 0);
+				if(!retFound && ftype != IT::NODEF)
+					throw ERROR_THROW_IN(132, tables.LexTable.table[rstack.top().inLexTable].sn, -1);
 			}
 			if (rstack.top().type == SPR || rstack.top().type == RET)
 				astack.push(rstack.top());
@@ -67,8 +71,9 @@ namespace SA
 		return true;
 	}
 
-	bool Semantic(LEXA::Tables& tables)
+	bool Semantic(LEXA::Tables& tables, stack<Error::ERROR>* wq)
 	{
+		warningQ = wq;
 		//std::stack<FunToken> funIdInLex;
 		for (int i = 0; i < tables.LexTable.size; i++)
 		{
@@ -133,31 +138,75 @@ namespace SA
 			{
 				i += ExpressionCheck(i, tables);
 			}
+			else if (tables.LexTable.table[i].lexema == LEX_IF || tables.LexTable.table[i].lexema == LEX_WHILE)
+			{
+				i += ExpressionCheck(i, tables, IT::BOOL);
+			}
+			else if (tables.LexTable.table[i].lexema == LEX_EVENT)
+			{
+				if(tables.idTable.table[tables.LexTable.table[i - 1].idxTI].iddatatype != IT::HTMLOBJ ||
+					tables.idTable.table[tables.LexTable.table[i + 1].idxTI].iddatatype != IT::STR)
+					throw ERROR_THROW_IN(124, tables.LexTable.table[i].sn, -1);
+			}
 		}
 		FunRetAnlz(tables);
 		return false;
 	}
 
-	int ExpressionCheck(int index, LEXA::Tables& tables)
+	int ExpressionCheck(int index, LEXA::Tables& tables, IT::IDDATATYPE type)
 	{
-		IT::IDDATATYPE type = tables.idTable.table[tables.LexTable.table[index - 1].idxTI].iddatatype;
+		if(type == IT::NODEF)
+			type = tables.idTable.table[tables.LexTable.table[index - 1].idxTI].iddatatype;
 		int size = 0;
+		bool oprFound = false;
+		bool hasBoolOpr = false;
+		bool needBoolOpr = false;
 		for (int i = index; tables.LexTable.table[i].lexema != LEX_SEMICOLON; i++)
 		{
+			if (tables.LexTable.table[i].lexema == '{')
+				break;
 			size++;
 			if (tables.LexTable.table[i].lexema == LEX_ID && tables.LexTable.table[i + 1].lexema == LEX_LEFTHESIS && tables.LexTable.table[i - 1].lexema != LEX_FUNCTION)
 			{
-				if (tables.idTable.table[tables.LexTable.table[i].idxTI].iddatatype != type)
+				if (type == IT::BOOL && tables.idTable.table[tables.LexTable.table[i].idxTI].iddatatype != type)
+					needBoolOpr = true;
+				if (type != IT::BOOL && tables.idTable.table[tables.LexTable.table[i].idxTI].iddatatype != type)
 					throw ERROR_THROW_IN(124, tables.LexTable.table[i].sn, -1);
 				while (tables.LexTable.table[i].lexema != ')')
 					i++;
 			}
 			else if (tables.LexTable.table[i].lexema == LEX_LITERAL || tables.LexTable.table[i].lexema == LEX_ID)
 			{
-				if (tables.idTable.table[tables.LexTable.table[i].idxTI].iddatatype != type)
+				if (tables.idTable.table[tables.LexTable.table[i].idxTI].iddatatype == IT::BYTE && type == IT::INT)
+					continue;
+				if(type == IT::BOOL && tables.idTable.table[tables.LexTable.table[i].idxTI].iddatatype == IT::STR)
+					throw ERROR_THROW_IN(129, tables.LexTable.table[i].sn, -1);
+				if (type == IT::BOOL && tables.idTable.table[tables.LexTable.table[i].idxTI].iddatatype != type)
+					needBoolOpr = true;
+				if (type != IT::BOOL &&tables.idTable.table[tables.LexTable.table[i].idxTI].iddatatype != type)
+					throw ERROR_THROW_IN(124, tables.LexTable.table[i].sn, -1);
+			}
+			else if (tables.LexTable.table[i].lexema == LEX_OPERATOR)
+			{
+				oprFound = true;
+				if (type == IT::BYTE && tables.LexTable.table[i].opr->type == IT::INT)
+					continue;
+				if (tables.LexTable.table[i].opr->type == IT::BOOL)
+				{
+					if(hasBoolOpr)
+						throw ERROR_THROW_IN(124, tables.LexTable.table[i].sn, -1);
+					hasBoolOpr = true;
+				}
+				if (type == IT::BOOL && tables.LexTable.table[i].opr->type != type)
+					needBoolOpr = true;
+				if (type != IT::BOOL && tables.LexTable.table[i].opr->type != type)
 					throw ERROR_THROW_IN(124, tables.LexTable.table[i].sn, -1);
 			}
 		}
+		if(needBoolOpr && !hasBoolOpr)
+			throw ERROR_THROW_IN(130, tables.LexTable.table[index].sn, -1);
+		if (oprFound && type == IT::BYTE)
+			warningQ->push( Error::geterrorin(133, tables.LexTable.table[index].sn, -1) );
 		return size;
 	}
 
@@ -278,9 +327,9 @@ namespace SA
 
 	char GetTypeInChar(IT::IDDATATYPE type)
 	{
-		//error
 		switch (type)
 		{
+		case IT::BYTE:
 		case IT::INT:
 			return 'i';
 		case IT::STR:
@@ -331,13 +380,6 @@ namespace SA
 				anlStack.pop();
 				anlStack.push(EToken(EnvironmentToken(), env));
 				anlStack.top().token.type = ENVT;
-				//tables.idTable.table[envStack.top().inIdTable].envLevel = level;
-				/*while (!envioments.empty() && envioments.top()->level > env->level)
-				{
-					envioments.top()->SetParent(env);
-					envioments.pop();
-				}
-				envioments.push(env);*/
 				level--;
 				if (level  == -1)
 					throw ERROR_THROW(98);
@@ -352,6 +394,8 @@ namespace SA
 						tables.idTable.table[envStack.top().inIdTable].AddParm(tables.idTable.table[anlStack.top().token.inIdTable].iddatatype);
 						tables.idTable.table[anlStack.top().token.inIdTable].idtype = IT::P;
 						parmIndex.push(anlStack.top().token.inIdTable);
+						if (parmIndex.size() >= TI_MAX_COUNT_PARM)
+							throw ERROR_THROW_IN(123, tables.idTable.table[envStack.top().inIdTable].str_number, -1);
 					}
 					anlStack.pop();
 					if (anlStack.empty())

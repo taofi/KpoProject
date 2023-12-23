@@ -5,8 +5,25 @@
 #include "LexAnalysis2.h"
 #include "Error.h"
 
+#define MAXBYTE 127
+#define MINBYTE -128
+#define MAXNUM 2147483647
+#define MINNUM -2147483648
 
 IT::IDDATATYPE LastVarType;
+
+int lexemaLine = 1;
+int lexemaPosition = 0;
+
+long int CharToInt(const char* charArray) {
+	long int value = 0;
+	for (int i = 0; charArray[i] != '\0'; ++i) {
+		if (i > 10)
+			throw ERROR_THROW_IN(93, lexemaLine, lexemaPosition);
+		value = value * 10 + (charArray[i] - '0');
+	}
+	return value;
+}
 
 int NotationToDec(char* s)
 {
@@ -49,8 +66,10 @@ void ChangeLastType(char* ch, int strLine)
 {
 	if (strcmp(ch, "number") == 0)
 		LastVarType = IT::INT;
-	else if (strcmp(ch, "string") == 0)
+	else if (strcmp(ch, "str") == 0)
 		LastVarType = IT::STR;
+	else if (strcmp(ch, "byte") == 0)
+		LastVarType = IT::BYTE;
 	else if (strcmp(ch, "bool") == 0)
 		LastVarType = IT::BOOL;
 	else if (strcmp(ch, "htmlobj") == 0)
@@ -99,43 +118,38 @@ namespace LEXA
 	void InitFunTable(Tables& tables)
 	{
 		tables.fTable.size = 0;
-		AddDecFun(tables, "console", IT::NODEF, "function console1s(str)\n{\nconsole.log(str);\n}\n", 1, IT::STR);
-		AddDecFun(tables, "sqrt", IT::INT, "function sqrt1i(number)\n{\nreturn Math.sqrt(number);\n}\n", 1, IT::INT);
-		AddDecFun(tables, "pow", IT::INT, "function pow2ii(number, degree)\n{\nreturn Math.pow(number, degree);\n}\n", 2, IT::INT, IT::INT);
-		AddDecFun(tables, "concat", IT::STR, "function pow2ii(str1, str2)\n{\nreturn str1 + str2;\n}\n", 2, IT::STR, IT::STR);
-		AddDecFun(tables, "itos", IT::STR, "function itos1i(number)\n{\nreturn ('' + number);\n}\n", 1, IT::INT);
-		AddDecFun(tables, "strsize", IT::INT, "function strsize1s(str)\n{\nreturn str.length;\n}\n", 1, IT::STR);
+		AddDecFun(tables, "console", IT::NODEF, "function console1s(str){console.log(str);}\n", 1, IT::STR);
+		AddDecFun(tables, "sqrt", IT::INT, "function sqrt1i(number){return Math.sqrt(number);}\n", 1, IT::INT);
+		AddDecFun(tables, "pow", IT::INT, "function pow2ii(number, degree){return Math.pow(number, degree);}n\n", 2, IT::INT, IT::INT);
+		AddDecFun(tables, "concat", IT::STR, "function concat2ss(str1, str2){return str1 + str2;}\n", 2, IT::STR, IT::STR);
+		AddDecFun(tables, "itos", IT::STR, "function itos1i(number){return String(number);}\n", 1, IT::INT);
+		AddDecFun(tables, "strsize", IT::INT, "function strsize1s(str){return str.length;}\n", 1, IT::STR);
 		AddDecFun(tables, "CreateVideo", IT::HTMLOBJ, "function CreateVideo1s(link) {\n"
-													"    var iframe = document.createElement(\"iframe\");\n"
+													"    let iframe = document.createElement(\"iframe\");\n"
 													"    iframe.width = \"560\";\n"
 													"    iframe.height = \"315\";\n"
 													"    iframe.src = link;\n"
-													"    iframe.title = \"YouTube video player\";\n"
-													"    iframe.frameBorder = \"0\";\n"
 													"    iframe.allow = \"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\";\n"
 													"    iframe.allowFullscreen = true;\n"
 													"    return iframe;\n"
 													"}", 1, IT::STR);
 		//AddDecFun(tables, "video", IT::NODEF, "function video1s(link)\n{\ndocument.body.innerHTML += `<iframe width=\"560\" height=\"315\" src=${link} title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>`;\n}\n", 1, IT::STR);
 		AddDecFun(tables, "tomas", IT::NODEF, "function tomas0()\n{\ndocument.body.innerHTML += '<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/X-ANZ8ba8jU?autoplay=1&loop=1\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>';\n}\n", 0, IT::NODEF);
-		AddDecFun(tables, "GetHtmlById", IT::HTMLOBJ, "function GetHtmlById1s(tag)\n{\nreturn document.getElementById(tag);\n}\n", 1, IT::STR);
-		AddDecFun(tables, "GetBody", IT::HTMLOBJ, "function GetBody0()\n{\nreturn document.body;\n}\n", 0, IT::NODEF);
-		AddDecFun(tables, "Create", IT::HTMLOBJ, "function Create1s(tag)\n{\nreturn document.createElement(tag);\n}\n", 1, IT::STR);
-		AddDecFun(tables, "InsertToHtml", IT::NODEF, "function InsertToHtml2hh(parent, child)\n{\nparent.appendChild(child);\n}\n", 2, IT::HTMLOBJ, IT::HTMLOBJ);
-		AddDecFun(tables, "TextSet", IT::NODEF, "function TextSet2hs(tag, text)\n{\ntag.innerHTML = text;\n}\n", 2, IT::HTMLOBJ, IT::STR);
-		AddDecFun(tables, "TextAdd", IT::NODEF, "function TextAdd2hs(tag, text)\n{\ntag.innerHTML += text;\n}\n", 2, IT::HTMLOBJ, IT::STR);
-		AddDecFun(tables, "SetCSS", IT::NODEF, "function SetCSS2hs(tag, css)\n{\ntag.style.cssText = css;\n}\n", 2, IT::HTMLOBJ, IT::STR);
-		AddDecFun(tables, "AddCSS", IT::NODEF, "function AddCSS2hs(tag, css)\n{\ntag.style.cssText += css;\n}\n", 2, IT::HTMLOBJ, IT::STR);
+		AddDecFun(tables, "GetHtmlById", IT::HTMLOBJ, "function GetHtmlById1s(tag){return document.getElementById(tag);}\n", 1, IT::STR);
+		AddDecFun(tables, "GetBody", IT::HTMLOBJ, "function GetBody0(){return document.body;}\n", 0, IT::NODEF);
+		AddDecFun(tables, "Create", IT::HTMLOBJ, "function Create1s(tag){return document.createElement(tag);}\n", 1, IT::STR);
+		AddDecFun(tables, "InsertToHtml", IT::NODEF, "function InsertToHtml2hh(parent, child){parent.appendChild(child);}\n", 2, IT::HTMLOBJ, IT::HTMLOBJ);
+		AddDecFun(tables, "TextSet", IT::NODEF, "function TextSet2hs(tag, text){tag.innerHTML = text;}\n", 2, IT::HTMLOBJ, IT::STR);
+		AddDecFun(tables, "write", IT::NODEF, "function write2hs(tag, text){tag.innerHTML += text;}\n", 2, IT::HTMLOBJ, IT::STR);
+		AddDecFun(tables, "writeln", IT::NODEF, "function writeln2hs(tag, text){tag.innerHTML += `<br>${text}`;}\n", 2, IT::HTMLOBJ, IT::STR);
+		AddDecFun(tables, "SetCSS", IT::NODEF, "function SetCSS2hs(tag, css){tag.style.cssText = css;}\n", 2, IT::HTMLOBJ, IT::STR);
+		AddDecFun(tables, "AddCSS", IT::NODEF, "function AddCSS2hs(tag, css){tag.style.cssText += css;}\n", 2, IT::HTMLOBJ, IT::STR);
+		AddDecFun(tables, "SetAttribute", IT::NODEF, "function SetAttribute3hss(tag, atr, value){tag.setAttribute(atr, value);}\n", 3, IT::HTMLOBJ, IT::STR, IT::STR);
 	}
-	int lexemaPosition = 0;
+	
 	void LexicalAnalyzer(const In::IN& source, Tables& tables)
 	{
 		bool isWord = false;
-
-		//int tempWordIndex = 0;
-		int lexemaLine = 1;
-		
-
 		In::IN inTable;
 		//int tabCount = 0;
 		for (int i = 0; i < source.size; i++)
@@ -145,7 +159,6 @@ namespace LEXA
 			if (source.text[i] == '|')
 			{
 			
-				//std::cout << lexemaLine << " " << i << " " << source.text[i] << std::endl;
 				lexemaLine++;
 				lexemaPosition = 0;
 				continue;
@@ -178,12 +191,23 @@ namespace LEXA
 				if (source.text[i] == ' ' || source.text[i] == '\t')
 					continue;
 				if (inTable.code[source.text[i]] == inTable.S)
+				{
 					token.type = INSTTB::SPR;
+					token.word[token.size++] = source.text[i];
+					lexemaPosition++;
+				}
 				else
+				{
 					token.type = INSTTB::OPR;
-				token.word[token.size++] = source.text[i];
-				//throw ERROR_THROW_IN(123, lexemaLine, lexemaPosition); // символ операции или сепаратор не распозна
-				lexemaPosition++;
+					while (inTable.code[source.text[i]] == inTable.O)
+					{
+						token.word[token.size++] = source.text[i];
+						i++;
+						lexemaPosition++;
+					}
+					lexemaPosition--;
+					i--;
+				}	
 			}
 			else
 				token.type = INSTTB::WORD;
@@ -209,11 +233,6 @@ namespace LEXA
 	bool AnalyzeToken(Token& token, int strLine, Tables& tables)
 	{
 		INSTTB::FSTGen fstg = tables.instTable.GetFST(token.id, token.word);
-		/*if (fstg.type == INSTTB::WORDTYPE::LEX)
-		{
-			INDAnalyz(fstg, strLine, tables);
-			return true;
-		}*/
 
 		FSTExecute(fstg);
 		if(fstg.type == INSTTB::NODEF)
@@ -239,9 +258,10 @@ namespace LEXA
 	void INDAnalyz(INSTTB::FSTGen& fstg, int strLine, Tables& tables)
 	{
 		IT::IDDATATYPE indType;
+		long int value;
+		bool isNota = fstg.type == INSTTB::NOTA;
 		if (fstg.type == INSTTB::NOTA)
 		{
-			int value;
 			value = NotationToDec(fstg.analizStr);
 			strcpy(fstg.analizStr, intToChar(value));
 			fstg.type = INSTTB::LEX;
@@ -254,12 +274,17 @@ namespace LEXA
 				indType = IT::BOOL;
 			else
 			{
-				for (int i = 0; i < strlen(fstg.analizStr); i++)
-				{
-					if (fstg.analizStr[i] < '0' || fstg.analizStr[i] > '9')
-						throw ERROR_THROW_IN(98, strLine, -1);
-				}
-				indType = IT::INT;
+				if (!isNota)
+					value = CharToInt(fstg.analizStr);
+				if (tables.LexTable.table[tables.LexTable.size - 1].lexema == LEX_OPERATOR && tables.LexTable.table[tables.LexTable.size -1 ].opr->opr[0] == '-'
+					&& (tables.LexTable.table[tables.LexTable.size - 2].lexema == LEX_EQUAL_SIGN || tables.LexTable.table[tables.LexTable.size - 2].lexema == LEX_LEFTBRACE))
+					value *= -1;
+				if(value > MAXNUM || value < MINNUM)
+					throw ERROR_THROW_IN(93, lexemaLine, lexemaPosition);
+				if (value > MAXBYTE || value < MINBYTE)
+					indType = IT::INT;
+				else
+					indType = IT::BYTE;
 			}
 			int n = tables.idTable.literalCount;
 			int size = 4;
@@ -275,16 +300,28 @@ namespace LEXA
 				id[2] = '0';
 				id[3] = '\0';
 			}
-			tables.idTable.Add(IT::Entry(id, indType, IT::L, tables.LexTable.size, fstg.analizStr, strLine));
-			LT::Add(tables.LexTable, LT::Entry(fstg.lex, strLine, tables.idTable.size - 1));
+			if (indType == IT::BYTE || indType == IT::INT)
+			{
+				tables.idTable.Add(IT::Entry(id, indType, IT::L, tables.LexTable.size, strLine));
+				tables.idTable.table[tables.idTable.size -1].value.vint = value;
+				if(value < 0)
+					tables.LexTable.table[tables.LexTable.size - 1] = LT::Entry(fstg.lex, strLine, tables.idTable.size - 1);
+				else
+					tables.LexTable.Add(LT::Entry(fstg.lex, strLine, tables.idTable.size - 1));
+			}
+			else
+			{
+				tables.idTable.Add(IT::Entry(id, indType, IT::L, tables.LexTable.size, fstg.analizStr, strLine));
+				LT::Add(tables.LexTable, LT::Entry(fstg.lex, strLine, tables.idTable.size - 1));
+			}
 			tables.idTable.literalCount++;
 			return;
 		}
 		if(fstg.type == INSTTB::LEX && fstg.analizStr[0] >= '0' && fstg.analizStr[0] <= '9')
 			throw ERROR_THROW_IN(95, strLine, -1);
-		if (tables.LexTable.size == 0)
+		if (fstg.lex != 'm' && tables.LexTable.size == 0)
 			throw ERROR_THROW_IN(97, strLine, -1);
-		if (tables.LexTable.table[tables.LexTable.size - 1].lexema == LEX_FUNCTION || fstg.lex == 'm') //первое объявление функции
+		if (fstg.lex == 'm' || tables.LexTable.table[tables.LexTable.size - 1].lexema == LEX_FUNCTION) //первое объявление функции
 		{
 			if(fstg.lex == 'm')
 				tables.idTable.Add(IT::Entry(fstg.analizStr, IT::NODEF, IT::F, tables.LexTable.size, strLine));
@@ -344,15 +381,4 @@ namespace LEXA
 		tables.instTable.DeleteTable();
 		tables.global->Delete();
 	}
-
-	//Token ReadToken(int index, const In::IN& source)
-	//{
-	//	char word[WORDMAXSIZE];
-	//	int size = 0;
-	//	while (inTable.code[source.text[index]] == inTable.T && source.text[index] != '|')
-	//	{
-	//		word[size++] = source.text[index++];
-	//	}
-	//	return Token(word, LEX);
-	//}
 }

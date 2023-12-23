@@ -38,7 +38,10 @@ namespace GEN
 		genTable[LEX_DATATYPE] = { IGNR };
 		genTable[LEX_EQUAL_SIGN] = { " = ", DIRCT };
 		genTable[LEX_ID] = { INDF };
-		genTable['w'] = {"while", DIRCT};
+		genTable[LEX_WHILE] = {"while", DIRCT};
+		genTable[LEX_IF] = { "if", DIRCT };
+		genTable['e'] = {"else", DIRCT};
+		genTable[LEX_EVENT] = { ".addEventListener(", EVENT };
 		genTable[LEX_LEFTBRACE] = { "{\n", DIRCT };
 		genTable[LEX_LEFTHESIS] = { "( ", DIRCT };
 		genTable[LEX_MAIN] = { "function main() ", DIRCT };
@@ -46,8 +49,6 @@ namespace GEN
 		genTable[LEX_RIGHTBRACE] = { "}\n", RIGHTBR };
 		genTable[LEX_RIGHTHESIS] = { " )", DIRCT };
 		genTable[LEX_SEMICOLON] = { ";\n", SEMICLN };
-		genTable[PLUS] = { " + ", DIRCT };
-		genTable[MINUS] = { " - ", DIRCT };
 		genTable[LEX_OPERATOR] = { OPRT };
 		genTable[LEX_LITERAL] = { INDF };
 	}
@@ -64,6 +65,7 @@ namespace GEN
 
 		bool wasIgnoredVar = false;
 		bool wasIgnoredFun = false;
+		bool isEvent = false;
 		for (int i = 0; i < tables.LexTable.size; i++)
 		{
 			if (genTable[tables.LexTable.table[i].lexema].lexType == IGNR)
@@ -79,6 +81,11 @@ namespace GEN
 				continue;
 			if (genTable[tables.LexTable.table[i].lexema].lexType == SEMICLN)
 			{
+				if (isEvent)
+				{
+					file << ")";
+					isEvent = false;
+				}
 				if (wasIgnoredVar)
 					wasIgnoredVar = false;
 				else
@@ -93,7 +100,6 @@ namespace GEN
 			else if (genTable[tables.LexTable.table[i].lexema].lexType == INDF)
 			{
 				IT::Entry ITEntry = tables.idTable.table[tables.LexTable.table[i].idxTI];
-				//std::cout << ITEntry.id << " " << ITEntry.refCount << std::endl;
 				if (ITEntry.idtype == IT::IDTYPE::P)
 				{
 					file << ITEntry.id;
@@ -108,7 +114,6 @@ namespace GEN
 						}
 						else
 							file << "let " << ITEntry.id << " = function";
-						
 					}
 					else
 					 file << ITEntry.id;
@@ -128,7 +133,7 @@ namespace GEN
 						//if (ITEntry.iddatatype == IT::NODEF)
 						//	continue;*/
 						//else 
-						if (ITEntry.iddatatype == IT::INT && tables.LexTable.table[i + 1].lexema == LEX_SEMICOLON)
+						if ((ITEntry.iddatatype == IT::INT || ITEntry.iddatatype == IT::BYTE) && tables.LexTable.table[i + 1].lexema == LEX_SEMICOLON)
 							file << " = 0";
 						else if(ITEntry.iddatatype == IT::STR && tables.LexTable.table[i + 1].lexema == LEX_SEMICOLON)
 							file << " = ''";
@@ -138,7 +143,7 @@ namespace GEN
 				}
 				else if (ITEntry.idtype == IT::IDTYPE::L)
 				{
-					if(ITEntry.iddatatype == IT::INT)
+					if(ITEntry.iddatatype == IT::INT || ITEntry.iddatatype == IT::BYTE)
 						file << ITEntry.value.vint;
 					else if(ITEntry.iddatatype == IT::STR || ITEntry.iddatatype == IT::BOOL)
 						file << ITEntry.value.vstr.str;
@@ -148,6 +153,13 @@ namespace GEN
 			else if(genTable[tables.LexTable.table[i].lexema].lexType == OPRT)
 			{
 				file  << " " << tables.LexTable.table[i].opr->opr << " ";
+			}
+			else if (genTable[tables.LexTable.table[i].lexema].lexType == EVENT)
+			{
+				file << genTable[tables.LexTable.table[i].lexema].JsLex;
+				file << tables.idTable.table[tables.LexTable.table[++i].idxTI].value.vstr.str << " , () => ";
+				i++;
+				isEvent = true;
 			}
 		}
 

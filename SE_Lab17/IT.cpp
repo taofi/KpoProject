@@ -23,11 +23,13 @@ namespace IT
 		idtype = IT::IDTYPE::D;
 		str_number = 0;
 		refCount = 0;
-		indexPF = 0;
+		//indexPF = 0;
 	}
 	void Entry::AddParm(IDDATATYPE iddatatype)
 	{
 		value.parm.type[value.parm.parmQuantity++] = iddatatype;
+		if(value.parm.parmQuantity >= TI_MAX_COUNT_PARM)
+			throw ERROR_THROW_IN(132, this->str_number, -1);
 	}
 
 	Entry::Entry(const char* id, IDDATATYPE iddatatype, IDTYPE idtype, int first, int str_number)
@@ -51,7 +53,7 @@ namespace IT
 		this->iddatatype = iddatatype;
 		this->idtype = idtype;
 		this->refCount = 0;
-		indexPF = 0;
+		//indexPF = 0;
 	}
 
 	Entry::Entry(const char* id, IDDATATYPE iddatatype, IDTYPE idtype, int first, const char* ch, int str_number)
@@ -80,17 +82,8 @@ namespace IT
 				value.vstr.str[i] = ch[i];
 			value.vstr.str[i] = '\0';
 		}
-		else if (iddatatype == INT)
-		{
-			value.vint = 0;
-			int size = strlen(ch);
-			for (int i = 0; i < size; i++)
-			{
-				value.vint += (ch[i] - '0') * pow(10, size - i - 1);
-			}
-		}
 		
-		indexPF = 0;
+		//indexPF = 0;
 	}
 
 	IdTable Create(int size)
@@ -149,12 +142,11 @@ namespace IT
 		return buffer;
 	}
 
-	void IdTable::PrintIdTable(const wchar_t* inFile)
+	void IdTable::PrintIdTable(std::ofstream &idStream)
 	{
-		ofstream idStream(inFile);
 
 		if (!idStream.is_open())
-			throw ERROR_THROW(64);
+			throw ERROR_THROW(63);
 
 		idStream << "------------------ Литералы ------------------" << endl;
 		idStream << setw(15) << "Идентификатор:" << setw(17) << "Тип данных:" << setw(15) << "Значение:" << setw(27) << "Длина строки:" << setw(27) << "Первое вхождение:" << endl;
@@ -163,21 +155,28 @@ namespace IT
 		{
 			if (table[i].idtype == IT::IDTYPE::L)
 			{
-				idStream << setw(4) << i << "  ";
+				idStream << setw(4) << i << "  " << this->table[i].id << setw(17);
 				cout.width(25);
 				switch (table[i].iddatatype)
 				{
+				case BYTE:
+					idStream << "BYTE " << setw(15);
+					break;
 				case IDDATATYPE::INT:
-					idStream << this->table[i].id << setw(17) << "INT " << setw(15) << table[i].value.vint << setw(27) << "-" << setw(27) << table[i].firstApi << endl;
+					idStream  << "INT " << setw(15) ;
 					break;
 				case IDDATATYPE::STR:
-					idStream << this->table[i].id << setw(17) << "STR " << setw(15) << table[i].value.vstr.str << setw(27) << (int)table[i].value.vstr.len << setw(27) << table[i].firstApi << endl;
+					idStream << "STR " << setw(15); 
 					break;
 				case IDDATATYPE::BOOL:
-					idStream << this->table[i].id << setw(17) << "BOOL " << setw(15) << table[i].value.vstr.str << setw(27) << (int)table[i].value.vstr.len << setw(27) << table[i].firstApi << endl;
+					idStream << "BOOL " << setw(15);
 					break;
 				}
-			}
+				if (table[i].iddatatype == BYTE || table[i].iddatatype == INT)
+					idStream << table[i].value.vint << setw(27) << "-" << setw(27) << table[i].firstApi << endl;
+				else
+					idStream << table[i].value.vstr.str << setw(27) << (int)table[i].value.vstr.len << setw(27) << table[i].firstApi << endl;
+			}	
 		}
 
 		idStream << "\n\n\n";
@@ -191,7 +190,10 @@ namespace IT
 				idStream << setw(4) << i << "  " << table[i].id << setw(28 - strlen(table[i].id));
 				switch (table[i].iddatatype)
 				{
-				case IDDATATYPE::INT:
+				case BYTE:
+					idStream << "BYTE " << setw(36);
+					break;
+				case INT:
 					idStream  << "INT " << setw(36);
 					break;
 				case IDDATATYPE::STR:
@@ -245,6 +247,9 @@ namespace IT
 				idStream << setw(18) << table[i].indEnv->name << setw(20) << table[i].id << setw(20);
 				switch (table[i].iddatatype)
 				{
+				case BYTE:
+					idStream << "BYTE " << setw(36);
+					break;
 				case IDDATATYPE::INT:
 					idStream << "INT " << setw(15);
 					break;
@@ -267,7 +272,5 @@ namespace IT
 		}
 
 		idStream << "\n\n\n";
-
-		idStream.close();
 	}
 }

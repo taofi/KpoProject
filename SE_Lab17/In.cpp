@@ -43,7 +43,7 @@ namespace In
 			{
 				throw ERROR_THROW_IN(111, in.lines, posInLine);
 			}
-			else if (in.code[c] == IN::I || (posSymb != 0 && c == ' ' && in.text[posSymb - 1] == c))
+			else if (in.code[c] == IN::I )
 			{
 				in.ignor++;
 			}

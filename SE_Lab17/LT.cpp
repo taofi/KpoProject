@@ -33,9 +33,9 @@ namespace LT
 		delete[] lextable.table;
 		lextable.table = nullptr;
 	}
-	void LexTable::PrintLexTable(const wchar_t* in)
+	void LexTable::PrintLexTable(std::ofstream& lexStream)
 	{
-		ofstream lexStream(in);
+		
 
 		if(!lexStream.is_open())
 			throw ERROR_THROW(63);
@@ -52,7 +52,6 @@ namespace LT
 			lexStream << '\n' << ++num_string << " ";
 		}
 
-		lexStream.close();
 	}
 
 	void LexTable::UnformattedPrintLexTable(const wchar_t* in)

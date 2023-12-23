@@ -1,7 +1,7 @@
 #pragma once
-#define MAXINDCOUNT 50
-#define ID_MAXSIZE	45
-#define TI_MAX_COUNT_PARM 20
+#define MAXINDCOUNT 300
+#define ID_MAXSIZE 20
+#define TI_MAX_COUNT_PARM 10
 #include <fstream>
 
 namespace ENV

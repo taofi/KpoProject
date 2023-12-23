@@ -1,6 +1,7 @@
 #pragma once
 #pragma once
 #include "IT.h"
+#include <fstream>
 #include "OperatorTable.h"
 #define LEXEMA_FIXSIZE  1			// фиксированный размер лексемы
 #define	LT_MAXSIZE		4096		// максимальное количество строк в таблице лексем	
@@ -25,14 +26,12 @@
 #define	LEX_PLUS		'v'			// лексема для +
 #define	LEX_MINUS		'v'			// лексема для -
 #define	LEX_STAR		'v'			// лексема для *
-#define	LEX_DIRSLASH	'v'			// лексема для /
 #define LEX_OPERATOR	'v'
 #define	LEX_EQUAL_SIGN	'='			// лексема для =
+#define LEX_IF			'j'			//лексема для if
+#define LEX_WHILE		'w'			//лексема для while
+#define LEX_EVENT		'p'			//лексема для событий
 
-#define PLUS '+'
-#define MINUS '-'
-#define STAR '*'
-#define DIRSLASH '/'
 
 
 namespace LT									// таблица лексем
@@ -57,7 +56,7 @@ namespace LT									// таблица лексем
 			int n									// номер получаемой строки
 		);
 
-		void PrintLexTable(const wchar_t* in);		// вывод таблицы лексем
+		void PrintLexTable(std::ofstream& lexStream);		// вывод таблицы лексем
 		void UnformattedPrintLexTable(const wchar_t* in);
 		LexTable();
 		void Add(									// добавить строку в таблицу лексем

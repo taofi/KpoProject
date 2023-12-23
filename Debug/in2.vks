@@ -1,58 +1,45 @@
-string function fi(number y)
+htmlobj function Create(str name, str css)
 {
-number x;
-x = x > 0;
-	number function intLv2(number asd)
-	{
-		asd = asd + 16x234 * 10;
-		return asd;
-	}
-number z;
-z = intLv2(123) + y;
-string l;
-l = itos(z);
-console(l);
-return '123';
-}
-nodef function videoBody(string link)
-{
-	htmlobj body = GetBody();
-	htmlobj videoTag = CreateVideo(link);
-	InsertToHtml(body, videoTag);
+	byte usl = -22; 
+	htmlobj tag = Create(name);
+	SetCSS(tag, css);
+	return tag;
 }
 
-
-nodef function fun4cr()
-{
-	htmlobj body = GetBody();
-	htmlobj tag = Create('div');
-	number f = 100;
-	while(f > 0)
-	{
-		f = f - 1;
-		TextAdd(tag, '4 ');
-	}
-	InsertToHtml(body, tag);
+htmlobj function CreateButton(str value)
+{	
+	htmlobj button = Create('input', 'width: 100px; height: 50px; margin: 4px; background-color: gray; border-radius: 10px; ');
+	SetAttribute(button, 'type', 'button');
+	SetAttribute(button, 'value', value);
+	return button;
 }
 
 
 main
 {
-number y;
-y = pow(2, 3);
-string z;
-number asd123 = 16xF;
-y = y + asd123 + 2x11 + 8x442;
-string l2 = fi(y);
-console(l2);
-tomas();
-tomas();
-tomas();
-tomas();
-tomas();
-tomas();
-tomas();
-tomas();
-tomas();
-
+	htmlobj body = GetBody();
+	htmlobj window = Create('div', 'width: 560px; height: 315px; background-color: white; box-sizing: content-box; padding: 5px; border: solid 3px black;');
+	InsertToHtml(body, window);
+	nodef function YoutubeVidoMaker(str shortLink)
+	{
+		str link = concat(shortLink, '?autoplay=1&loop=1');
+		htmlobj videoTag = CreateVideo(link);
+		InsertToHtml(body, videoTag);
+	}
+	TextSet(window, 'window of number');
+	byte i = -9;
+	while(i != 0)
+	{
+		str s = itos(i);
+		htmlobj button = CreateButton(s);
+		InsertToHtml(body, button);
+		if(i <= 4)
+		{
+			button event 'click', writeln(window, '');
+		}
+		button event 'click', write(window, s);
+		i = i -1;
+	}
+	
+	YoutubeVidoMaker('https://www.youtube.com/embed/X-ANZ8ba8jU');
 }

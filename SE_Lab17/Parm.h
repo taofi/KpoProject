@@ -4,9 +4,8 @@
 #define PARM_LOG L"-log:"
 #define PARM_GEN L"-gen:"
 #define PARM_MAX_SIZE 300	 
-#define PARM_OUT_DEFAULT_EXT L".out"	
+#define PARM_OUT_DEFAULT_EXT L".js"	
 #define PARM_LOG_DEFAULT_EXT L".log"
-#define PARM_GEN_DEFAULT_EXT L".js"
 
 namespace Parm
 {
@@ -15,7 +14,6 @@ namespace Parm
 		wchar_t in[PARM_MAX_SIZE];
 		wchar_t out[PARM_MAX_SIZE];
 		wchar_t log[PARM_MAX_SIZE];
-		wchar_t gen[PARM_MAX_SIZE];
 	};
 	PARM getparm(int argc, wchar_t* argv[]);
 }
